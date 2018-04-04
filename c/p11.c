@@ -2,9 +2,9 @@
 
 
 void main(){
-	int c;
+    int c;
 
-	while((c = getchar()) != EOF){
-		printf("%d\n", (c=getchar()) != EOF);
-	}
+    while((c = getchar()) != EOF){
+        printf("%d\n", (c=getchar()) != EOF);
+    }
 }
