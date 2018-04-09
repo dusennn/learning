@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 int max(int a, int b){
 	return a > b ? a : b;
@@ -27,8 +28,22 @@ void test2(){
 	printf("MAX: %d\n", p(p(a, b), c));
 }
 
-int main(){
-	test2();
+int getRandomNum(){
+	return rand();
+}
 
+void initArrarys(int *arr, int len, int(* random)()){
+	for (int i = 0; i < len; ++i){
+		arr[i] = random();
+	}
+}
+
+int main(){
+	int arr[5];
+	initArrarys(arr, 5, getRandomNum);
+
+	for (int i = 0; i < 5; ++i){
+		printf("%d\n", arr[i]);
+	}
 	return 0;
 }
