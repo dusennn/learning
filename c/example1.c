@@ -7,18 +7,20 @@
 int main(){
 	int x, y, z;
 
-	int count = 0;
-	
-	for(x = 1; x < 5; x ++){
-		for(y = 1; y < 5; y ++){
-			for(z = 1; z < 5; z ++){
+	int total = 0;
+
+	for(x = 1; x <= 4; x ++){
+		for(y = 1; y <= 4; y ++){
+			for(z = 1; z <= 4; z ++){
 				if(x != y && x != z && y != z){
-					printf("%d%d%d \n", x, y, z);
-					count += 1;
+					total += 1;
+					printf("%d%d%d\n", x, y, z);
 				}
 			}
 		}
 	}
 
-	printf("能组成 %d 个互相不重复的三位数！\n", count);
+	printf("共能组成 %d \n", total);
+
+	return 0;
 }
