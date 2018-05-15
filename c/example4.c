@@ -4,7 +4,7 @@
 	输入某年某月某日，判断这一天是这一年的第几天？
 */
 
-int main(){
+void method1(){
 	int year, month, day, days;
 
 	printf("请输入年：\n");
@@ -65,4 +65,40 @@ int main(){
 	}
 
 	printf("%d年%d月%d日是这一年的第 %d 天!\n", year, month, day, days);
+}
+
+void method2(){
+	int year, month, day, days;
+	int months[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	
+	printf("请输入年：\n");
+	scanf("%d", &year);
+
+	printf("请输入月：\n");
+	scanf("%d", &month);
+
+
+	printf("请输入日：\n");
+	scanf("%d", &day);
+	
+	days = day;
+	for(int i = 0 ; i < month - 1; i ++){
+		days += months[i];
+	}
+
+	if(year % 400 == 0){
+		days += 1;
+	}else if(year % 4 == 0){
+		days += 1;
+	}
+
+	printf("%d年%d月%d日是这一年的第 %d 天!\n", year, month, day, days);
+}
+
+int main(){
+	// method1();	
+
+	method2();
+
+	return 0;
 }
