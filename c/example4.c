@@ -58,10 +58,12 @@ void method1(){
 			break;
 	}
 
-	if(year % 400 == 0){
-		days += 1;
-	}else if(year % 4 == 0){
-		days += 1;
+	if(month > 2){
+		if(year % 400 == 0){
+			days += 1;
+		}else if(year % 4 == 0){
+			days += 1;
+		}
 	}
 
 	printf("%d年%d月%d日是这一年的第 %d 天!\n", year, month, day, days);
@@ -86,10 +88,12 @@ void method2(){
 		days += months[i];
 	}
 
-	if(year % 400 == 0){
-		days += 1;
-	}else if(year % 4 == 0){
-		days += 1;
+	if(month > 2){
+		if(year % 400 == 0){
+			days += 1;
+		}else if(year % 4 == 0){
+			days += 1;
+		}
 	}
 
 	printf("%d年%d月%d日是这一年的第 %d 天!\n", year, month, day, days);
