@@ -107,4 +107,6 @@ int main(){
 	method2();
 
 	method3();
+
+	return 0;
 }
