@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define OVERFLOW 0
 #define ERROR 0
@@ -105,9 +106,23 @@ int mergeList(LinkList la, LinkList lb, LinkList lc){
     return OK;
 }
 
+//头插法创建列表
+void createListHeard(LinkList l){
+    srand(time(0));
+    int count = 0;
+    while(count <5){
+        LNode *n = (LNode *)malloc(sizeof(LNode));
+        n->data = rand() % 100 + 1;
+        n->next = l->next;
+        l->next = n;
+        count++;
+    }
+}
+
 void main(){ 
     LinkList L = InitList();
-    
+    createListHeard(L);
+    print(L);
   //  LNode *N;
   //  N = (LNode *)malloc(sizeof(LNode));
   //  N->data = 2;
@@ -144,20 +159,20 @@ void main(){
    //     print(L);
    // }
  
-    LinkList la = InitList();
-    LinkList lb = InitList();
-    LinkList lc = InitList();
-
-    ListInsert(la, 1, 10);
-    ListInsert(la, 2, 13);
-    ListInsert(lb, 1, 4);
-    ListInsert(lb, 2, 5);
-    ListInsert(lb, 3, 17);
-    ListInsert(lb, 4, 19);
-    printf("after merge list...\n");
-    print(la);
-    print(lb);
-    mergeList(la, lb, lc);
-    printf("before merge list:\n");
-    print(lc);
+//    LinkList la = InitList();
+//    LinkList lb = InitList();
+//    LinkList lc = InitList();
+//
+//    ListInsert(la, 1, 10);
+//    ListInsert(la, 2, 13);
+//    ListInsert(lb, 1, 4);
+//    ListInsert(lb, 2, 5);
+//    ListInsert(lb, 3, 17);
+//    ListInsert(lb, 4, 19);
+//    printf("after merge list...\n");
+//    print(la);
+//    print(lb);
+//    mergeList(la, lb, lc);
+//    printf("before merge list:\n");
+//    print(lc);
 }
