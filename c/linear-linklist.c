@@ -25,7 +25,7 @@ LinkList InitList(){
 int ListInsert(LinkList l, int i, ElemType e){
     int j = 0;
     LinkList p = l;
-    if(!p||j>=i) return ERROR;
+    if(!l&&j>=i) return ERROR;
     while(p && j < i - 1){
         p = p->next;
         j++;
@@ -91,16 +91,30 @@ int listDel(LinkList l, int i, ElemType *e){
 
 }
 
+int mergeList(LinkList la, LinkList lb, LinkList lc){
+    while(la->next){
+        ListInsert(lc, 1, la->next->data);
+        la = la->next;
+    }
+    while(lb->next){
+        ListInsert(lc, 1, lb->next->data);
+        lb = lb->next;
+    }
+    free(la);
+    free(lb);
+    return OK;
+}
+
 void main(){ 
     LinkList L = InitList();
     
-    LNode *N;
-    N = (LNode *)malloc(sizeof(LNode));
-    N->data = 2;
-    N->next =L->next;
-    L->next = N;
-    generateTestData(L);
-    print(L);
+  //  LNode *N;
+  //  N = (LNode *)malloc(sizeof(LNode));
+  //  N->data = 2;
+  //  N->next =L->next;
+  //  L->next = N;
+  //  generateTestData(L);
+  //  print(L);
     /*
     printf("before insert...\n");
     print(L);
@@ -118,16 +132,32 @@ void main(){
 //        printf("Point %d : %d \n", 3, e);
 //    }
     
-    ElemType e;
-    int status = listDel(L, 3, &e);
-    if(!status){
-        printf("del error!\n");
-    }else{
-        printf("del success!\n");
-        printf("Point %d : %d \n", 3, e);
-        printf("del after...\n");
-        print(L);
-    }
- 
 
+   // ElemType e; 
+   // int status = listDel(L, 3, &e);
+   // if(!status){
+   //     printf("del error!\n");
+   // }else{
+   //     printf("del success!\n");
+   //     printf("Point %d : %d \n", 3, e);
+   //     printf("del after...\n");
+   //     print(L);
+   // }
+ 
+    LinkList la = InitList();
+    LinkList lb = InitList();
+    LinkList lc = InitList();
+
+    ListInsert(la, 1, 10);
+    ListInsert(la, 2, 13);
+    ListInsert(lb, 1, 4);
+    ListInsert(lb, 2, 5);
+    ListInsert(lb, 3, 17);
+    ListInsert(lb, 4, 19);
+    printf("after merge list...\n");
+    print(la);
+    print(lb);
+    mergeList(la, lb, lc);
+    printf("before merge list:\n");
+    print(lc);
 }
