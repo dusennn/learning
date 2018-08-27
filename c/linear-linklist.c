@@ -15,9 +15,9 @@ typedef struct LNode{
 
 LinkList InitList(){
     LinkList L = (LNode *)malloc(sizeof(LNode));
-    
+
     if(!L) exit(OVERFLOW);
-    
+
     L->next =NULL;
 
     return L;
@@ -31,7 +31,7 @@ int ListInsert(LinkList l, int i, ElemType e){
         p = p->next;
         j++;
     }
-        
+
     if(!p || j > i ) return ERROR;
     LNode *n = (LNode *)malloc(sizeof(LNode));
     n->data = e;
@@ -52,8 +52,9 @@ void print(LinkList l){
 }
 
 void generateTestData(LinkList l){
+    srand(time(0));
     for(int i=1; i<5; i++){
-        ListInsert(l, 1, 100+i);
+        ListInsert(l, 1, rand()%100+1);
     }
 }
 
@@ -75,7 +76,7 @@ int getElem(LinkList l, int i, ElemType *e){
 
 int listDel(LinkList l, int i, ElemType *e){
     if(!l || i < 1) return ERROR;
-    
+
     LinkList p = l;
     int count = 1;
     while(p->next){
@@ -87,23 +88,18 @@ int listDel(LinkList l, int i, ElemType *e){
         count++;
         p = p->next;
     }
-    
+
     if(!e) return ERROR;
 
 }
 
 int mergeList(LinkList la, LinkList lb, LinkList lc){
     while(la->next){
-        ListInsert(lc, 1, la->next->data);
+        lc->next = la->next;
+        lc = la->next;
         la = la->next;
     }
-    while(lb->next){
-        ListInsert(lc, 1, lb->next->data);
-        lb = lb->next;
-    }
-    free(la);
-    free(lb);
-    return OK;
+    lc->next = lb->next?lb->next:NULL;
 }
 
 //头插法创建列表
@@ -119,60 +115,92 @@ void createListHeard(LinkList l){
     }
 }
 
+//尾插法
+void createListTail(LinkList l){
+    LinkList p = l;
+    srand(time(0));
+    int count = 0;
+    while(count < 5){
+        LNode *n = (LNode *)malloc(sizeof(LNode));
+        n->data = rand()%100+1;
+        l->next = n;
+        l=n;
+        count++;
+    }
+    l->next=NULL;
+}
+
+int listEmpty(LinkList l){
+    LinkList p = l;
+    while(p){
+        p = l->next;
+        l->next=NULL;
+        l = p;
+    }
+}
+
 void main(){ 
     LinkList L = InitList();
-    createListHeard(L);
+    generateTestData(L);
+    printf("before list empty...\n");
     print(L);
-  //  LNode *N;
-  //  N = (LNode *)malloc(sizeof(LNode));
-  //  N->data = 2;
-  //  N->next =L->next;
-  //  L->next = N;
-  //  generateTestData(L);
-  //  print(L);
+    listEmpty(L);
+    printf("after list empty...\n");
+    print(L);
+    // createListTail(L);
+    // print(L);
+    // createListHeard(L);
+    // print(L);
+    //  LNode *N;
+    //  N = (LNode *)malloc(sizeof(LNode));
+    //  N->data = 2;
+    //  N->next =L->next;
+    //  L->next = N;
+    //  generateTestData(L);
+    //  print(L);
     /*
-    printf("before insert...\n");
-    print(L);
-    printf("after insert...\n");
-    ListInsert(L, 1, 105);
-    print(L);
-    */
-    
-//    ElemType e;
-//    int status = getElem(L, 3, &e);
-//    if(!status){
-//        printf("getting error!\n");
-//    }else{
-//        printf("getting success!\n");
-//        printf("Point %d : %d \n", 3, e);
-//    }
-    
+       printf("before insert...\n");
+       print(L);
+       printf("after insert...\n");
+       ListInsert(L, 1, 105);
+       print(L);
+       */
 
-   // ElemType e; 
-   // int status = listDel(L, 3, &e);
-   // if(!status){
-   //     printf("del error!\n");
-   // }else{
-   //     printf("del success!\n");
-   //     printf("Point %d : %d \n", 3, e);
-   //     printf("del after...\n");
-   //     print(L);
-   // }
- 
-//    LinkList la = InitList();
-//    LinkList lb = InitList();
-//    LinkList lc = InitList();
-//
-//    ListInsert(la, 1, 10);
-//    ListInsert(la, 2, 13);
-//    ListInsert(lb, 1, 4);
-//    ListInsert(lb, 2, 5);
-//    ListInsert(lb, 3, 17);
-//    ListInsert(lb, 4, 19);
-//    printf("after merge list...\n");
-//    print(la);
-//    print(lb);
-//    mergeList(la, lb, lc);
-//    printf("before merge list:\n");
-//    print(lc);
+    //    ElemType e;
+    //    int status = getElem(L, 3, &e);
+    //    if(!status){
+    //        printf("getting error!\n");
+    //    }else{
+    //        printf("getting success!\n");
+    //        printf("Point %d : %d \n", 3, e);
+    //    }
+
+
+    // ElemType e; 
+    // int status = listDel(L, 3, &e);
+    // if(!status){
+    //     printf("del error!\n");
+    // }else{
+    //     printf("del success!\n");
+    //     printf("Point %d : %d \n", 3, e);
+    //     printf("del after...\n");
+    //     print(L);
+    // }
+
+  //  LinkList la = InitList();
+  //  LinkList lb = InitList();
+  //  LinkList lc = InitList();
+
+  //  ListInsert(la, 1, 10);
+  //  ListInsert(la, 2, 13);
+  //  ListInsert(lb, 1, 4);
+  //  ListInsert(lb, 2, 5);
+  //  ListInsert(lb, 3, 17);
+  //  ListInsert(lb, 4, 19);
+  //  printf("after merge list...\n");
+  //  print(la);
+  //  print(lb);
+  //  mergeList(la, lb, lc);
+  //  printf("before merge list:\n");
+  //  print(lc);
 }
