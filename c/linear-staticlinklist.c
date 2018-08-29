@@ -40,27 +40,31 @@ void randomData(SLList s){
     s[i-1].cur = 0;
 }
 
-int listInsert(SLList s, int i, ElemType e){
-    if(i < 1 || i > MAXSIZE-1 || i > s[0].cur) return ERROR;
-    
+//获取空闲分量的游标
+int malloc_sll(SLList s){
     int cursor = s[0].cur;
-    s[0].cur = (cursor+1);
-    s[cursor].data = e;
+    if(cursor)
+        s[0].cur = s[cursor].cur;
+    
+    return cursor;
+}
 
-    if(!s[MAXSIZE-1].cur){
-        s[cursor].cur = 0;
-        s[MAXSIZE-1].cur = 1;
-    }else{
-        s[cursor].cur = (i+1);
-    }
-   
-    if(i == 1){
-        s[MAXSIZE-1].cur = cursor;
-        s[cursor].cur = 1;
-    }else{
-        s[i-1].cur = cursor;
+int listInsert(SLList s, int i, ElemType e){
+    if(i<1 || i>MAXSIZE-1 || !s[MAXSIZE-1].cur) return ERROR;
+    
+    /*寻找要插入位置的前一个元素。
+    *通过链表最后一个元素的指针得到第一个元素的位置，
+    *然后循环i-1次，得到要插入元素的前一个元素的游标。*/
+    int pre = s[MAXSIZE-1].cur;
+    for(int j=1; j<i-1; j++){
+        pre = s[pre].cur;
     }
     
+    int cursor = malloc_sll(s);
+    s[cursor].data = e;
+    s[cursor].cur = i;
+    s[pre].cur = cursor;
+
     return OK;
 }
 
@@ -73,10 +77,7 @@ int main(){
     print(s);
     ElemType e;
     e = 10;
-    listInsert(s, 3, e);
+    listInsert(s, 1, e);
     printf("after insert...\n");
     print(s);
-    printf("generate random data...\n");
-//    randomData(s);
-//    print(s);
 }
