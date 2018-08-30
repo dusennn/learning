@@ -90,41 +90,24 @@ int listDel(CycleLinkList l, int i, ElemType *e){
  于是逃过了这场死亡游戏.
 */
 void josephus(CycleLinkList l, int num){
-    LNode *head, *target;
-    head = l;
-    target = l->next;
-    int survivors = lengthList(l)%num;//游戏注定的幸存者数量
-    int people = 1;
-    while(1){
-        int count = 1;
-        while(target!=head){
-            if(count==3){
-                printf("第 %d 个死亡者是：%d 号！\n", people, target->data);
-                if(head==target->next){
-                    head = target->next->next;
-                }
-                target->next = target->next->next;
-                people++;
-                count = 1;
-                break;
+    int count = 1;
+    int flag = lengthList(l)%num;
+    while(l){
+        if(count==flag+1){
+            if(!l->next->data){
+                l = l->next;
             }
-            target = target->next;
-            count++;
+            printf("%d->", l->next->data);
+            l->next = l->next->next;
+            count = 1;
         }
-        if(head==target){
-            target = target->next;
-        }
-        int len = lengthList(target);
-        if(len == survivors){
-            printf("本轮幸运儿：\n");
-            for(int i=1; i<=len; i++){
-                printf("%d号 ", target->next->data);
-                target = target->next;
-            }
-            printf("\n");
+        count++;
+        l = l->next;
+        if(lengthList(l)==flag){
+            printf("\n幸存者：%d, %d\n", l->data, l->next->data);
             return;
         }
-    }
+    } 
 } 
 
 /*
