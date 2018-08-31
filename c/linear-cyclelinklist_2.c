@@ -31,6 +31,40 @@ void print(CycleLinkList l){
     }
 }
 
+//rear
+CycleLinkList initListByRear(){
+    CycleLinkList l = (LNode *)malloc(sizeof(LNode));
+    if(!l) exit(0);
+
+    l->next = l;
+    l = l->next;
+    return l;
+}
+
+void randomData(CycleLinkList l, int key){
+    srand(time(0));
+    LNode *rear = l;
+    for(int i=0; i<5; i++){
+        LNode *temp = (LNode *)malloc(sizeof(LNode));
+        temp->data = key*(rand()%10);
+        temp->next = rear->next;
+        rear->next = temp;
+        rear = temp;
+    }
+}
+
+void printByRear(CycleLinkList l){
+    LNode *rear, *target;
+    rear = l->next;
+    target = l->next->next;
+    int count = 1;
+    while(rear!=target){
+        printf("Point:%d, Data:%d\n", count, target->data);
+        count++;
+        target = target->next;
+    }
+}
+
 int createListByTail(CycleLinkList l, int length){
     LNode *head = l;
     while(head!=l->next){
@@ -155,10 +189,48 @@ void method2(CycleLinkList l){
 
 }
 
+//算法3：实现这样一个数列，横着竖着数字均不重复。
+/*
+1 2 3 4
+2 3 4 1
+3 4 1 2
+4 3 2 1
+*/
+void method3(){
+    printf("数列长度：");
+    int len;
+    scanf("%d", &len);
+    printf("\nprocessing...\n");
+
+    CycleLinkList l = initListByRear();
+    for(int i=1; i<=len; i++){
+        LNode *n = (LNode *)malloc(sizeof(LNode));
+        n->data = i;
+        n->next = l->next;
+        l->next = n;
+        l = n;
+    }
+
+    for(int i=1; i<=len; i++){
+        for(int j=1; j<=i; j++){
+            l = l->next;
+        }
+        LNode *head = l;
+        while(head!=l->next){
+            l = l->next;
+            printf("%d ", l->data);
+        }
+        printf("\n");
+    }
+
+}
+
 int main(){
-    CycleLinkList l = initList();
-    print(l);
-    method2(l);
+    method3();
+
+//    CycleLinkList l = initList();
+//    print(l);
+//    method2(l);
 
 //    createListByTail(l, 41);
 //    print(l);
