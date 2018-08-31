@@ -118,15 +118,51 @@ void josephus(CycleLinkList l, int num){
  从他顺时针方向上的下一个人开始从1报数，一如此下去，
  直至所有人全部出列为止。
 */
-void method2(){
+void method2(CycleLinkList l){
+    LNode *rare = l->next;
+    printf("GAME STARTING...\n\n");
+    printf("请输入游戏人数: ");
+    int pNum;
+    scanf("%d", &pNum);
+    for(int i=1; i<=pNum; i++){
+        printf("第%d人的密码：", i);
+        int pw;
+        scanf("%d", &pw);
+        LNode *n = (LNode *)malloc(sizeof(LNode));
+        n->data = pw;
+        n->next = rare->next;
+        rare->next = n;
+        rare = n;
+    }
+    printf("\n各就各位：\n");
+    print(l);
+
+    printf("\n判官请输入初始值：");
+    int firstM, count;
+    scanf("%d", &firstM);
+    count = 1;
+    printf("\nNOTICE!!!（判官闯入游戏。。。）\n");
+    while(l!=l->next){
+        for(int j=1; j<firstM; j++){
+           l = l->next; 
+        }
+        firstM = l->next->data;
+        printf("第%d轮，密码<%d>持有者出列！\n", count, firstM);
+        l->next = l->next->next;
+        count++;
+    }
+    printf("\nGAME OVER\n\n幸存者：%d\n", l->data);
 
 }
 
 int main(){
     CycleLinkList l = initList();
-    createListByTail(l, 41);
     print(l);
-    printf("GAME STARTING...\n");
-    josephus(l, 3);
-    printf("GAME OVER.\n");
+    method2(l);
+
+//    createListByTail(l, 41);
+//    print(l);
+//    printf("GAME STARTING...\n");
+//    josephus(l, 3);
+//    printf("GAME OVER.\n");
 }
