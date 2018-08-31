@@ -177,17 +177,39 @@ int merge(){
     printByRear(lb);
 }
 
-//判断列表是否是循环表
+//判断列表是否是循环表: 1 is, -1 not
 int validLoop(CycleLinkList l){
-    LNode *this = l;
-    while(1){
-        if(!l) return 1;
+    LNode *target = l;
+    if(!target) return -1;
+    while(target){
+        LNode *p = target->next;
+        if(!p) return -1;
+        while(p){
+            if(target==p->next) return 1;
 
-        if(this==l->next) return 2;
+            if(!p->next) return -1;
 
-        l = l->next;
+            p = p->next;
+        }
+        target = target->next;
     }
 }
+
+//方法二：判断列表是否是循环列表（快慢指针）：1 is, -1 not
+int validLoop2(CycleLinkList l){
+    LNode *fast, *slow;
+    fast = l;
+    slow = l;
+    while(fast){
+        fast = fast->next->next;
+        slow = slow->next;
+
+        if(fast == slow) return 1;
+    }
+
+    if(!fast) return -1;
+}
+
 
 //判断链表中是否有环 (prepare)
 void validLoopPrepared(){
@@ -233,13 +255,21 @@ void validLoopPrepared(){
         count++;
     }
 
-    //调用方法
-    int isLoop = validLoop(iLoop);
+    //调用方法一
+    int isLoop = validLoop(nLoop);
     printf("%d\n", isLoop);
+
+    //调用方法二
+    int isloop2 = validLoop2(nLoop);
+    printf("%d\n", isloop2);
 }
 
 int main(){
     validLoopPrepared();
+    CycleLinkList l = initList();
+    randomData(l, 2);
+    int isLoop = validLoop(l);
+    printf("\n%d\n", isLoop);
    // merge();
    // CycleLinkList l = initList();
    // ElemType e;
