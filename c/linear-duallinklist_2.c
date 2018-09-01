@@ -5,7 +5,7 @@
 
 typedef char ElemType;
 typedef struct DualNode{
-    ElemType *data;
+    ElemType data;
     struct DualNode *prior;
     struct DualNode *next;
 }DualNode, *DualList;
@@ -26,8 +26,8 @@ void print(DualList l){
     head = l;
     target = l->next;
     int count=1;
-    while(head!=target){
-        printf("%d -> %s\n", count, target->data);
+    while(head!=target->next){
+        printf("%d -> %c\n", count, target->data);
         target = target->next;
         count++;
     }
@@ -60,19 +60,38 @@ void pratice1(){
     if(!l) exit(0);
 
     DualNode *target = l;
-    char *c[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}; 
     for(int i=0; i<26; i++){
         DualNode *temp = (DualNode *)malloc(sizeof(DualNode));
-        temp->data = c[i]; 
-        temp->next = target->next;
-        temp->prior = target;
-        target->next = temp;
-        target = target->next;
+        temp->data = 'A'+i;
+        temp->next = target;
+        temp->prior = target->prior;
+        target->prior->next = temp;
+        target->prior = temp;
     }
+    l = l->prior;
+    l->next = target->next;
+    target->next->prior = l;
+    l = l->next;
+    target = l;
 
-    print(l);
+    printf("请输入一个数字：");
+    int num;
+    scanf("%d", &num);
+    printf("\n");
+    for(int i=0; i<(num<0?-num:num); i++){
+        target = num<0?target->prior:target->next;
+    }
+    DualNode *this = target;
+    do{
+        printf("%c", target->data);
+        target = target->next;
+    }while(this!=target);
+    printf("\n");
+
 }
 
-void main(){
+int main(){
     pratice1();
+
+    return 0;
 }
