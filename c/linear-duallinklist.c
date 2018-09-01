@@ -80,15 +80,38 @@ int listInsert(DualList l, int point, ElemType *e){
     return 1;
 }
 
+int listDel(DualList l, int point, ElemType *e){
+    if(!l||point<1||point>lengthList(l)) return -1;   
+
+    DualNode *target = l;
+    for(int i=1; i<=point; i++){
+        target = target->next;
+    }
+    if(!target) return -1;
+
+    *e = target->data;
+    target->next->prior = target->prior;
+    target->prior->next = target->next;
+    free(target);
+    
+    return 1;
+}
+
 void main(){
     DualList l = initList();
     ElemType e;
     randomData(l);
 
-    printf("before insert:\n");
+    printf("before delete:\n");
     print(l);
-    e = 99;
-    listInsert(l, 2, &e);
-    printf("after insert...\n");
+    listDel(l, 3, &e);
+    printf("after delete...\n");
     print(l);
+
+   // printf("before insert:\n");
+   // print(l);
+   // e = 99;
+   // listInsert(l, 2, &e);
+   // printf("after insert...\n");
+   // print(l);
 }
