@@ -111,10 +111,10 @@ int main(){
    // len = stackLength(s);
    // printf("current size : %d\n", len);
 
-    printf("destroy stack...\n");
-    destoryStack(&s);
-    len = stackLength(s);
-    printf("current size: %d\n", len);
+   // printf("destroy stack...\n");
+   // destoryStack(&s);
+   // len = stackLength(s);
+   // printf("current size: %d\n", len);
     
 
 }
