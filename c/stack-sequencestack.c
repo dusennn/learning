@@ -69,19 +69,20 @@ Status getTop(SqStack s, ElemType *e){
 Status clearStack(SqStack *s){
     if(!s->base) return ERROR;
 
-    while(s->top!=s->base){
-        s->top--;
-    }
+    s->top = s->base;
     s->stacksize = INIT_SIZE;
     return OK;
 }
 
 Status destoryStack(SqStack *s){
-    while(s->top!=s->base){
-        s->top--;
+    int len = s->stacksize;
+    for(int i=0; i<len; i++){
+        free(s->base);
+        s->base++;
     }
-    free(s->base);
-    free(s->top);
+    s->top = s->base = NULL;
+    s->stacksize =0;
+    
     return OK;
 }
 
@@ -105,15 +106,15 @@ int main(){
     len = stackLength(s);
     printf("current size : %d\n", len);
 
-    clearStack(&s);
-    printf("clear stack...\n");
-    len = stackLength(s);
-    printf("current size : %d\n", len);
-
-   // printf("destroy stack...\n");
-   // destoryStack(&s);
+   // clearStack(&s);
+   // printf("clear stack...\n");
    // len = stackLength(s);
-   // printf("current size: %d\n", len);
+   // printf("current size : %d\n", len);
+
+    printf("destroy stack...\n");
+    destoryStack(&s);
+    len = stackLength(s);
+    printf("current size: %d\n", len);
     
 
 }
