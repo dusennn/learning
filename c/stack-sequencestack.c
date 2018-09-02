@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define INIT_SIZE 10
+#define INIT_SIZE 20
+#define INCREASE_SIZE 10
 #define MAX_SIZE 100
 #define ERROR -1
 #define OK 1
@@ -16,17 +17,103 @@ typedef struct SqStack{
 }SqStack;
 
 Status initStack(SqStack *s){
-    s = (SqStack *)malloc(INIT_SIZE*sizeof(ElemType));
-    if(s->base) exit(0);
+    s->base = (ElemType *)malloc(INIT_SIZE*sizeof(ElemType));
+    if(!s->base) exit(0);
 
     s->top = s->base;
-    s->stacksize = 0;
+    s->stacksize = INIT_SIZE;
+    return OK;
+}
+
+Status push(SqStack *s, ElemType e){
+    if(s->top-s->base>=s->stacksize){
+        s->base = (ElemType *)realloc(s->base, (s->stacksize+INCREASE_SIZE)*sizeof(ElemType));
+
+        if(!s->base) exit(0);
+        s->top += *(s->base+s->stacksize);
+        s->stacksize += INCREASE_SIZE;
+    }
+    *s->top++ = e;
+
+    return OK;
+}
+
+Status pop(SqStack *s, ElemType *e){
+    if(!s->base) return ERROR;
+
+    e = s->top-1;
+    s->top--;
+    return OK;
+}
+
+int stackLength(SqStack s){
+    return s.top-s.base;
+}
+
+Status randomData(SqStack *s){
+    srand(time(0));
+    for(int i=1; i<=6; i++){
+        push(s, rand()%100);
+    }
+    return OK;
+}
+
+Status getTop(SqStack s, ElemType *e){
+    if(!s.base||s.top==s.base) return ERROR;
+
+    *e = *(s.top-1);
+    return OK;
+
+}
+
+Status clearStack(SqStack *s){
+    if(!s->base) return ERROR;
+
+    while(s->top!=s->base){
+        s->top--;
+    }
+    s->stacksize = INIT_SIZE;
+    return OK;
+}
+
+Status destoryStack(SqStack *s){
+    while(s->top!=s->base){
+        s->top--;
+    }
+    free(s->base);
+    free(s->top);
     return OK;
 }
 
 int main(){
     SqStack s;
+    ElemType e;
     initStack(&s);
-    printf("%d\n", s.stacksize);
-    return 0;
+    
+    e = 10;
+    push(&s, e);
+    randomData(&s);randomData(&s);randomData(&s);randomData(&s);
+    
+    int len = stackLength(s);
+    printf("current stack size : %d\n", len);
+
+    getTop(s, &e);
+    printf("stack top : %d\n", e);
+
+    pop(&s, &e);
+    printf("pop stack : %d\n", e);
+    len = stackLength(s);
+    printf("current size : %d\n", len);
+
+    clearStack(&s);
+    printf("clear stack...\n");
+    len = stackLength(s);
+    printf("current size : %d\n", len);
+
+   // printf("destroy stack...\n");
+   // destoryStack(&s);
+   // len = stackLength(s);
+   // printf("current size: %d\n", len);
+    
+
 }
