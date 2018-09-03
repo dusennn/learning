@@ -13,7 +13,7 @@ typedef int ElemType;
 typedef struct SqStack{
     ElemType *top;
     ElemType *base;
-    int stacksize;
+    int stackSize;
 }SqStack;
 
 Status initStack(SqStack *s){
@@ -21,17 +21,17 @@ Status initStack(SqStack *s){
     if(!s->base) exit(0);
 
     s->top = s->base;
-    s->stacksize = INIT_SIZE;
+    s->stackSize = INIT_SIZE;
     return OK;
 }
 
 Status push(SqStack *s, ElemType e){
-    if(s->top-s->base>=s->stacksize){
-        s->base = (ElemType *)realloc(s->base, (s->stacksize+INCREASE_SIZE)*sizeof(ElemType));
+    if(s->top-s->base>=s->stackSize){
+        s->base = (ElemType *)realloc(s->base, (s->stackSize+INCREASE_SIZE)*sizeof(ElemType));
 
         if(!s->base) exit(0);
-        s->top += *(s->base+s->stacksize);
-        s->stacksize += INCREASE_SIZE;
+        s->top += *(s->base+s->stackSize);
+        s->stackSize += INCREASE_SIZE;
     }
     *s->top++ = e;
 
@@ -69,18 +69,18 @@ Status clearStack(SqStack *s){
     if(!s->base) return ERROR;
 
     s->top = s->base;
-    s->stacksize = INIT_SIZE;
+    s->stackSize = INIT_SIZE;
     return OK;
 }
 
 Status destoryStack(SqStack *s){
-    int len = s->stacksize;
+    int len = s->stackSize;
     for(int i=0; i<len; i++){
         free(s->base);
         s->base++;
     }
     s->top = s->base = NULL;
-    s->stacksize =0;
+    s->stackSize =0;
     
     return OK;
 }
