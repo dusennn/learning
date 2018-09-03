@@ -41,8 +41,7 @@ Status push(SqStack *s, ElemType e){
 Status pop(SqStack *s, ElemType *e){
     if(!s->base) return ERROR;
 
-    e = s->top-1;
-    s->top--;
+    *e = *--s->top;
     return OK;
 }
 
