@@ -1,4 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+#define INIT_SIZE 20
+#define INCREASE_SIZE 10
+#define MAX_SIZE 1000
+
+typedef int ElemType;
 
 //阶乘
 int jiecheng(int num){
@@ -31,12 +38,26 @@ int fib1(){
     printf("\n");
 }
 
+//利用递归，对输入的任意字符，反向输出。
+void print(){
+    char c;
+    scanf("%c", &c);
+
+    if(c != '\n') print();
+    if(c != '\n') printf("%c", c);
+
+}
+
 int main(){
     int num, result;
+    char c;
+    
+    binarySearch();
+   // print();
 
-    num = 4;
-    result = jiecheng(num);
-    printf("%d -> %d\n", num, result);
+   // num = 4;
+   // result = jiecheng(num);
+   // printf("%d -> %d\n", num, result);
    // printf("迭代：\n");
    // fib1();
    // printf("递归：\n");
