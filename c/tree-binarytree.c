@@ -73,7 +73,16 @@ Status midPrint(BiTree t){
 
 //后序遍历
 Status subPrint(BiTree t){
-    if(!t) return ERROR;
+    if(t){
+        if(t->lchild){
+            subPrint(t->lchild);
+            if(t->rchild){
+                subPrint(t->rchild);
+            }
+        }
+        printf("%c ", t->data);
+        if(!t->lchild && !t->rchild) return OK;
+    }
 }
 
 int main(){
@@ -85,6 +94,10 @@ int main(){
 
     printf("中序遍历: \n");
     midPrint(t);
+    printf("\n");
+    
+    printf("后序遍历: \n");
+    subPrint(t);
     printf("\n");
     return 0;
 }
