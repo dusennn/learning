@@ -49,16 +49,26 @@ Status createTree(BiTree t){
 
 //先序遍历
 Status prePrint(BiTree t){
-    if(!t) return ERROR;
-    printf("%c ", t->data);
-    prePrint(t->lchild);
-    prePrint(t->rchild);
-    if(!t->lchild && !t->rchild) return OK;
+    if(t){
+        printf("%c ", t->data);
+        prePrint(t->lchild);
+        prePrint(t->rchild);
+        if(!t->lchild && !t->rchild) return OK;
+    }
 }
 
 //中序遍历
 Status midPrint(BiTree t){
-    if(!t) return ERROR;
+    if(t){
+        if(t->lchild){
+            midPrint(t->lchild);
+        }
+        printf("%c ", t->data);
+        if(t->rchild){
+            midPrint(t->rchild);
+        }
+        if(!t->lchild && !t->rchild) return OK;
+    }
 }
 
 //后序遍历
@@ -69,7 +79,12 @@ Status subPrint(BiTree t){
 int main(){
     BiTree t = initTree();
     createTree(t);
+    printf("先序遍历: \n");
     prePrint(t);
+    printf("\n");
+
+    printf("中序遍历: \n");
+    midPrint(t);
     printf("\n");
     return 0;
 }
