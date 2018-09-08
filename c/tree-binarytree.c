@@ -28,7 +28,13 @@ Status createTree(BiTree t){
     if(!lchild) exit(0);
 
     lchild->data = 'B';
-    lchild->lchild = lchild->rchild = NULL;
+    BiTNode *lchild2, *rchild2;
+    lchild2 = (BiTNode *)malloc(sizeof(BiTNode));
+    lchild2->data = 'D';
+    rchild2 = (BiTNode *)malloc(sizeof(BiTNode));
+    rchild2->data = 'E';
+    lchild->lchild = lchild2;
+    lchild->rchild = rchild2;
     t->lchild = lchild;
 
     rchild = (BiTNode *)malloc(sizeof(BiTNode));
@@ -44,6 +50,10 @@ Status createTree(BiTree t){
 //先序遍历
 Status prePrint(BiTree t){
     if(!t) return ERROR;
+    printf("%c ", t->data);
+    prePrint(t->lchild);
+    prePrint(t->rchild);
+    if(!t->lchild && !t->rchild) return OK;
 }
 
 //中序遍历
@@ -59,5 +69,7 @@ Status subPrint(BiTree t){
 int main(){
     BiTree t = initTree();
     createTree(t);
+    prePrint(t);
+    printf("\n");
     return 0;
 }
