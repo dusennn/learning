@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 #define ERROR -1
 #define OK 1
@@ -12,92 +11,65 @@ typedef struct BiTNode{
     struct BiTNode *lchild, *rchild;
 }BiTNode, *BiTree;
 
-BiTree initTree(){
-    BiTNode *t = (BiTNode *)malloc(sizeof(BiTNode));
-    if(!t) exit(0);
-
-    t->lchild = t->rchild = NULL;
-    
-    return t;
-}
-
-Status createTree(BiTree t){
-    t->data = 'A';
-    BiTNode *lchild, *rchild;
-    lchild = (BiTNode *)malloc(sizeof(BiTNode));
-    if(!lchild) exit(0);
-
-    lchild->data = 'B';
-    BiTNode *lchild2, *rchild2;
-    lchild2 = (BiTNode *)malloc(sizeof(BiTNode));
-    lchild2->data = 'D';
-    rchild2 = (BiTNode *)malloc(sizeof(BiTNode));
-    rchild2->data = 'E';
-    lchild->lchild = lchild2;
-    lchild->rchild = rchild2;
-    t->lchild = lchild;
-
-    rchild = (BiTNode *)malloc(sizeof(BiTNode));
-    if(!rchild) exit(0);
-
-    rchild->data = 'C';
-    rchild->lchild = rchild->rchild = NULL;
-    t->rchild = rchild;
-
-    return OK;
-}
-
-//先序遍历
-Status prePrint(BiTree t){
-    if(t){
-        printf("%c ", t->data);
-        prePrint(t->lchild);
-        prePrint(t->rchild);
-        if(!t->lchild && !t->rchild) return OK;
+//先序方式
+Status createTreeByPre(BiTree *t){
+    char c;
+    scanf("%c", &c);
+    if(c == ' '){
+        t = NULL;
+    }else{
+        *t = (BiTNode *)malloc(sizeof(BiTNode));
+        (*t)->data = c;
+        createTreeByPre(&(*t)->lchild);
+        createTreeByPre(&(*t)->rchild);
     }
 }
 
-//中序遍历
-Status midPrint(BiTree t){
+Status visit(BiTree t, int layer){
+    printf("DATA: %c, LAYER: %d\n", t->data, layer);
+}
+
+//先序遍历
+Status prePrint(BiTree t, int layer){
     if(t){
-        if(t->lchild){
-            midPrint(t->lchild);
-        }
-        printf("%c ", t->data);
-        if(t->rchild){
-            midPrint(t->rchild);
-        }
-        if(!t->lchild && !t->rchild) return OK;
+        visit(t, layer);
+        prePrint(t->lchild, layer+1);
+        prePrint(t->rchild, layer+1);
+    } 
+} 
+
+//中序遍历
+Status midPrint(BiTree t, int layer){
+    if(t){
+        midPrint(t->lchild, layer+1);
+        visit(t, layer);
+        midPrint(t->rchild, layer+1);
     }
 }
 
 //后序遍历
-Status subPrint(BiTree t){
+Status subPrint(BiTree t, int layer){
     if(t){
-        if(t->lchild){
-            subPrint(t->lchild);
-            if(t->rchild){
-                subPrint(t->rchild);
-            }
-        }
-        printf("%c ", t->data);
-        if(!t->lchild && !t->rchild) return OK;
+        subPrint(t->lchild, layer+1);
+        subPrint(t->rchild, layer+1);
+        visit(t, layer);
     }
 }
 
 int main(){
-    BiTree t = initTree();
-    createTree(t);
-    printf("先序遍历: \n");
-    prePrint(t);
-    printf("\n");
+    BiTree t = NULL;
+    int layer = 1;
 
-    printf("中序遍历: \n");
-    midPrint(t);
-    printf("\n");
-    
-    printf("后序遍历: \n");
-    subPrint(t);
-    printf("\n");
+    printf("Create Tree(Pre):\n");
+    createTreeByPre(&t);
+
+    printf("\nPrint Tree(Pre):\n");
+    prePrint(t, layer);
+
+    printf("\nPrint Tree(Mid):\n");
+    midPrint(t, layer);
+
+    printf("\nPrint Tree(Sub):\n");
+    subPrint(t, layer);
     return 0;
 }
