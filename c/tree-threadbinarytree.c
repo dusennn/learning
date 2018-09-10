@@ -20,11 +20,12 @@ Status createTree(ThrTree *t){
     char c;
     scanf("%c", &c);
     if(c == ' '){
-        t = NULL;
+        *t = NULL;
     }else{
         *t = (ThrNode *)malloc(sizeof(ThrNode));
         (*t)->data = c;
-        (*t)->ltag = (*t)->rtag = Link;
+        (*t)->ltag = Link;
+        (*t)->rtag = Link;
         createTree(&(*t)->lchild);
         createTree(&(*t)->rchild);
     }
@@ -39,7 +40,7 @@ Status inThreading(ThrTree t){
             t->lchild = pre;
         }
 
-        if(!t->rchild){
+        if(!pre->rchild){
             pre->rtag = Thread;
             pre->rchild = t;
         }
@@ -66,11 +67,35 @@ Status inOrderThread(ThrTree *p, ThrTree t){
     }
 }
 
+void visit(char c){
+    printf("%c ", c);
+}
+
+//中序遍历-非递归
+Status midPrint(ThrTree p){
+    ThrTree target = p->lchild;
+    while(target != p){
+        while(target->ltag == Link){
+            target = target->lchild;
+        }
+        visit(target->data);
+        while(target->rtag == Thread && target->rchild != p){
+            target = target->rchild;
+            visit(target->data);
+        }
+        target = target->rchild;
+    }
+}
+
 int main(){ 
     ThrTree p, t = NULL;
     printf("Create Tree(Pre):\n");
     createTree(&t);
     inOrderThread(&p, t);
+
+    printf("Print Tree(Mid):\n");
+    midPrint(p);
+    printf("\n");
 
     return 0;
 }
