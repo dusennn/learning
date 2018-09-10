@@ -1,16 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ERROR -1
-#define OK 1
+#define ERROR -Thread
+#define OK Thread
 
 typedef int Status;
 typedef char ElemType;
+typedef enum {Link, Thread} PointerTag; //Link:0 Thread: 1
+
 typedef struct ThrNode{
     ElemType data;
-    int ltag, rtag;
+    PointerTag ltag, rtag;
     struct ThrNode *lchild, *rchild;
 }ThrNode, *ThrTree;
+
+ThrTree pre;
 
 Status createTree(ThrTree *t){
     char c;
@@ -20,42 +24,53 @@ Status createTree(ThrTree *t){
     }else{
         *t = (ThrNode *)malloc(sizeof(ThrNode));
         (*t)->data = c;
-        (*t)->ltag = (*t)->rtag = 0;
+        (*t)->ltag = (*t)->rtag = Link;
         createTree(&(*t)->lchild);
         createTree(&(*t)->rchild);
     }
 }
 
-void visit(ThrTree t, int layer){
-    printf("DATA:%c, LAYER:%d\n", t->data, layer);
+//二叉树线索化
+Status inThreading(ThrTree t){
+    if(t){
+        inThreading(t->lchild); //线索化左孩子
+        if(!t->lchild){
+            t->ltag = Thread;
+            t->lchild = pre;
+        }
+
+        if(!t->rchild){
+            pre->rtag = Thread;
+            pre->rchild = t;
+        }
+        pre = t;
+        inThreading(t->rchild); // 线索化右孩子
+    }
 }
 
-Status midPrint(ThrTree t, int layer){
-    if(t){
-        midPrint(t->lchild, layer+1);
-        if(!t->lchild){
-            t->lchild = t;
-            t->ltag = 1;
-        }
-        visit(t, layer);
-        midPrint(t->rchild, layer+1);
-        if(!t->rchild){
-            t->rchild = t;
-            t->rtag = 1;
-        }
+//借助全局变量线索化
+Status inOrderThread(ThrTree *p, ThrTree t){
+    (*p) = (ThrNode *)malloc(sizeof(ThrNode));
+    (*p)->ltag = Link;
+    (*p)->rtag = Thread;
+    (*p)->rchild = *p;
+    if(!t){
+        (*p)->lchild = *p;
+    }else{
+        (*p)->lchild = t;
+        pre = (*p);
+        inThreading(t);
+        pre->rchild = *p;
+        pre->rtag = Thread;
+        (*p)->rchild = pre;
     }
 }
 
 int main(){ 
-    ThrTree t = NULL;
-    int layer = 1;
+    ThrTree p, t = NULL;
     printf("Create Tree(Pre):\n");
     createTree(&t);
-    
-    printf("Print Tree(Mid):\n");
-    midPrint(t, layer);
+    inOrderThread(&p, t);
 
-    printf("test:\n");
-    printf("-%c- -%d-\n", t->lchild->lchild->data, t->lchild->ltag);
     return 0;
 }
