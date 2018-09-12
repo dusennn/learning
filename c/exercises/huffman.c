@@ -1,44 +1,41 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #define ERROR -1
 #define OK 1
 
 typedef int Status;
 
-typedef struct{
-    char word;
-    int count;
-}Words;
+//Global variable
+int *word;
 
-Words arr[26];
-
-//rwf: relative word frequency
-Status rwf(char *c){
-    int i, j; 
+//word frequency statistic
+Status wf(char *c){
+    int i;
+    word = (int *)malloc(sizeof(int)*128);
+    for(i=0; i<=128; i++){
+        word[i] = 0;
+    }
+    i = 0;
     while(c[i]!='\0'){
-        j = c[i] - 65; // ASCII：A->65
-        if(!arr[j].word){
-            arr[j].word = c[i];
-            arr[j].count = 1;
-        }else{
-            arr[j].count++;
-        }
+        word[c[i]]++;
         i++;
     }
     return OK;
 }
 
-void print(){
-    int i = 0;
-    while(arr[i].word){
-        printf("Word:%c, Count:%d\n", arr[i].word, arr[i].count);
-        i++;
+void printWFTable(){
+    for(int i=0; i<=128; i++){
+        if(word[i]){
+            printf("Char:%c -> Count:%d\n", (char)i, word[i]);
+        }
     }
 }
 
 int main(){
-    char *c = "ABCADE"; 
-    rwf(c);
+    char *c = "Nobody want to be someone else...";
+    wf(c);
 
-    print();
+    printWFTable();
+    return 0;
 }
