@@ -1,18 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MAX_SIZE 128
 #define ERROR -1
 #define OK 1
 
 typedef int Status;
 
-//Global variable
-int *word;
+//huffman tree node
+typedef struct HTNode{
+    char data;
+    struct HuffmanNode *lchild, *rchild;
+}HTNode, *HTree;
+
+//huffman list node
+typedef struct HLNode{
+    HTree tnode;
+    int length;
+    struct HLNode *next;
+}HLNode, *HList;
 
 //word frequency statistic
-Status wf(char *c){
+int* wf(char *c){
     int i;
-    word = (int *)malloc(sizeof(int)*128);
+    int *word = (int *)malloc(sizeof(int)*128);
+    if(!word) exit(0);
+
     for(i=0; i<=128; i++){
         word[i] = 0;
     }
@@ -21,10 +34,10 @@ Status wf(char *c){
         word[c[i]]++;
         i++;
     }
-    return OK;
+    return word;
 }
 
-void printWFTable(){
+void printWFTable(int *word){
     for(int i=0; i<=128; i++){
         if(word[i]){
             printf("Char:%c -> Count:%d\n", (char)i, word[i]);
@@ -32,10 +45,71 @@ void printWFTable(){
     }
 }
 
-int main(){
-    char *c = "Nobody want to be someone else...";
-    wf(c);
+//构建一个集合，存放二叉树，按照词频从低到高排列
+HList buildTreeList(int *word){
+    HList hl = (HLNode *)malloc(sizeof(HLNode));
+    if(!hl) exit(0);
+    hl->tnode = NULL;
+    hl->next = NULL;
+    hl->length = 0;
 
-    printWFTable();
+    for(int i=0; i<=128; i++){
+        if(word[i]){
+            HTree tn = (HTNode *)malloc(sizeof(HTNode));
+            tn->lchild = tn->rchild = NULL;
+            tn->data = (char)i;
+
+            if(hl->length == 0){
+                hl->tnode = tn;
+            }
+            else{
+                // 寻找合适位置用于插入节点
+                HLNode *temp = (HLNode *)malloc(sizeof(HLNode));
+                temp->tnode = tn;
+                if(word[hl->tnode->data] >= word[i]){
+                    temp->next = hl;
+                    hl = temp;
+                }else{
+                    HLNode *first = hl;
+                    while(hl->next){
+                        if(word[hl->next->tnode->data] < word[i]){
+                            hl = hl->next;
+                        }else{
+                            break;
+                        }
+                    }
+                    temp->next = hl->next;
+                    hl->next = temp;
+                    hl = first;
+                }
+            }
+            hl->length++;
+        }
+    }
+    return hl;
+}
+
+void printTreeList(HList hl){
+    HLNode *target = hl;
+    int count = 0;
+    while(target){
+        printf("Point:%d, TreeNode:%c\n", count, target->tnode->data);
+        target = target->next;
+        count++;
+    }
+}
+
+int main(){
+    // 词频统计
+    int *word;
+    char *c = "wwwwwwwwwww Nobody want to be someone else...";
+    word = wf(c);
+    printWFTable(word);
+
+    //构建二叉树集合
+    HList hl;
+    hl = buildTreeList(word);
+    printTreeList(hl);
+
     return 0;
 }
