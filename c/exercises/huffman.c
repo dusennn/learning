@@ -10,6 +10,7 @@ typedef int Status;
 //huffman tree node
 typedef struct HTNode{
     char data;
+    int weight;
     struct HuffmanNode *lchild, *rchild;
 }HTNode, *HTree;
 
@@ -58,21 +59,23 @@ HList buildTreeList(int *word){
             HTree tn = (HTNode *)malloc(sizeof(HTNode));
             tn->lchild = tn->rchild = NULL;
             tn->data = (char)i;
+            tn->weight = word[i];
 
             if(hl->length == 0){
                 hl->tnode = tn;
+                hl->tnode->weight = word[i];
             }
             else{
                 // 寻找合适位置用于插入节点
                 HLNode *temp = (HLNode *)malloc(sizeof(HLNode));
                 temp->tnode = tn;
-                if(word[hl->tnode->data] >= word[i]){
+                if(hl->tnode->weight >= word[i]){
                     temp->next = hl;
                     hl = temp;
                 }else{
                     HLNode *first = hl;
                     while(hl->next){
-                        if(word[hl->next->tnode->data] < word[i]){
+                        if( hl->next->tnode->weight < word[i]){
                             hl = hl->next;
                         }else{
                             break;
@@ -99,6 +102,17 @@ void printTreeList(HList hl){
     }
 }
 
+//构建Huffman树
+Status buildHuffmanTree(HList hl, int *word){
+    while(hl->next){
+        HTNode *newTree = (HTNode *)malloc(sizeof(HTNode));
+        if(!newTree) exit(0);
+
+        
+    }
+    return OK;
+}
+
 int main(){
     // 词频统计
     int *word;
@@ -110,6 +124,9 @@ int main(){
     HList hl;
     hl = buildTreeList(word);
     printTreeList(hl);
+
+    //构建Huffman树
+//    buildHuffmanTree(hl, word);
 
     return 0;
 }
