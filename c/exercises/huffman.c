@@ -11,13 +11,12 @@ typedef int Status;
 typedef struct HTNode{
     char data;
     int weight;
-    struct HuffmanNode *lchild, *rchild;
+    struct HTNode *lchild, *rchild;
 }HTNode, *HTree;
 
 //huffman list node
 typedef struct HLNode{
     HTree tnode;
-    int length;
     struct HLNode *next;
 }HLNode, *HList;
 
@@ -52,7 +51,6 @@ HList buildTreeList(int *word){
     if(!hl) exit(0);
     hl->tnode = NULL;
     hl->next = NULL;
-    hl->length = 0;
 
     for(int i=0; i<=128; i++){
         if(word[i]){
@@ -61,7 +59,7 @@ HList buildTreeList(int *word){
             tn->data = (char)i;
             tn->weight = word[i];
 
-            if(hl->length == 0){
+            if(!hl->tnode){
                 hl->tnode = tn;
                 hl->tnode->weight = word[i];
             }
@@ -86,7 +84,6 @@ HList buildTreeList(int *word){
                     hl = first;
                 }
             }
-            hl->length++;
         }
     }
     return hl;
@@ -94,23 +91,54 @@ HList buildTreeList(int *word){
 
 void printTreeList(HList hl){
     HLNode *target = hl;
-    int count = 0;
+    int index = 0;
     while(target){
-        printf("Point:%d, TreeNode:%c\n", count, target->tnode->data);
+        printf("Index:%d, TreeNode:%c, Weight:%d\n", index, target->tnode->data, target->tnode->weight);
         target = target->next;
-        count++;
+        index++;
     }
 }
 
 //构建Huffman树
-Status buildHuffmanTree(HList hl, int *word){
+Status buildHuffmanTree(HList hl){
     while(hl->next){
+        HTNode *lchild, *rchild;
+        lchild = hl->tnode;
+        rchild = hl->next->tnode;
+
+        //构建新树
         HTNode *newTree = (HTNode *)malloc(sizeof(HTNode));
         if(!newTree) exit(0);
 
+        newTree->weight = (lchild->weight + rchild->weight);
+        newTree->lchild = lchild;
+        newTree->rchild = rchild;
         
+        hl = hl->next->next;
+        if(!hl){
+            hl->tnode = newTree;
+        }else{
+            // 寻找合适位置用于插入节点
+            HLNode *temp = (HLNode *)malloc(sizeof(HLNode));
+            temp->tnode = newTree;
+            if(hl->tnode->weight >= newTree->weight){
+                temp->next = hl;
+                hl = temp;
+            }else{
+                HLNode *first = hl;
+                while(hl->next){
+                    if( hl->next->tnode->weight < newTree->weight){
+                        hl = hl->next;
+                    }else{
+                        break;
+                    }
+                }
+                temp->next = hl->next;
+                hl->next = temp;
+                hl = first;
+            }
+        }
     }
-    return OK;
 }
 
 int main(){
@@ -126,7 +154,7 @@ int main(){
     printTreeList(hl);
 
     //构建Huffman树
-//    buildHuffmanTree(hl, word);
+    buildHuffmanTree(hl);
 
     return 0;
 }
