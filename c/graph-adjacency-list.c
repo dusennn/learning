@@ -25,3 +25,45 @@ typedef struct{
     int vernum,arcnum; //图的当前顶点数和弧数
     GraphKind kind; //图的类型
 }MGraph;
+
+//创建有向图
+Status createDG(MGraph *mg){
+    //TODO
+}
+
+//创建有向网
+Status createDN(MGraph *mg){
+    //TODO
+}
+
+//创建无向图
+Status createUDG(MGraph *mg){
+    //TODO
+}
+
+//创建无向网
+Status createUDN(MGraph *mg){
+    //TODO
+}
+
+Status createGraph(MGraph *mg){
+    printf("Choise Graph kind:\n1.Digraph\n2.Direct net\n3.Undigraph\n4.Undirect net\n");
+    scanf("%d", &mg->kind);
+    if(mg->kind == 1){
+        createDG(mg);
+    }else if(mg->kind == 2){
+        createDN(mg);
+    }else if(mg->kind == 3){
+        createUDG(mg);
+    }else if(mg->kind == 4){
+        createUDN(mg);
+    }else{
+        return ERROR;
+    }
+}
+
+int main(){
+    MGraph mg;
+    createGraph(&mg);
+    return 0;
+}
