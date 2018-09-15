@@ -61,7 +61,7 @@ Status createDG(MGraph *mg){
                 mg->matrix[i][j].data = 0;
                 continue;
             }
-            printf("向量:%c与向量:%c有无关联?[1:有 0:无]\n", mg->vertex[i], mg->vertex[j]);
+            printf("向量%c是否指向向量%c?[1:是 0:否]\n", mg->vertex[i], mg->vertex[j]);
             scanf("%d", &mg->matrix[i][j].data);
             getchar();
         }
@@ -81,7 +81,41 @@ Status createDN(MGraph *mg){
 
 //创建无向图
 Status createUDG(MGraph *mg){
-    //TODO
+    printf("=============LINE============\n");
+    printf("请输入顶点数:\n");
+    scanf("%d", &mg->vernum);
+    getchar();
+    if(mg->vernum > MAX_VERTEX_NUM) return ERROR;
+    printf("请输入弧数:\n");
+    scanf("%d", &mg->arcnum);
+    getchar();
+    if(mg->arcnum > MAX_VERTEX_NUM) return ERROR;
+
+    //init vertex
+    printf("请输入顶点向量:\n");
+    for(int i=0; i<mg->vernum; i++) {
+        scanf("%c", &mg->vertex[i]); 
+        getchar();
+    }
+    
+    //init adjacency list
+    for(int i=0; i<mg->vernum; i++){
+        for(int j=0; j<mg->vernum; j++){
+            if(i == j){
+                mg->matrix[i][j].data = 0;
+                continue;
+            }
+            printf("向量:%c与向量:%c有无关联?[1:有 0:无]\n", mg->vertex[i], mg->vertex[j]);
+            scanf("%d", &mg->matrix[i][j].data);
+            getchar();
+        }
+        printf("\n");
+    }
+    printf("=============LINE============\n");
+    printf("UnDigrahp:\n");
+    printAdjMatrix(mg);
+
+    return OK;
 }
 
 //创建无向网
