@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define INT_MAX 2147483647 //最大值∞
 #define ERROR -1
 #define OK 1
 #define MAX_VERTEX_NUM 10
@@ -29,7 +30,11 @@ typedef struct{
 void printAdjMatrix(MGraph *mg){
     for(int i=0; i<mg->vernum; i++){
         for(int j=0; j<mg->vernum; j++){
-            printf("%d  ", mg->matrix[i][j]);
+            if(mg->matrix[i][j].data == INT_MAX){
+                printf("∞ ");
+            }else{
+                printf("%d  ", mg->matrix[i][j].data);
+            }
         }
         printf("\n");
     }
@@ -76,7 +81,45 @@ Status createDG(MGraph *mg){
 
 //创建有向网
 Status createDN(MGraph *mg){
-    //TODO
+    printf("=============LINE============\n");
+    printf("请输入顶点数:\n");
+    scanf("%d", &mg->vernum);
+    getchar();
+    if(mg->vernum > MAX_VERTEX_NUM) return ERROR;
+    printf("请输入弧数:\n");
+    scanf("%d", &mg->arcnum);
+    getchar();
+    if(mg->arcnum > MAX_VERTEX_NUM) return ERROR;
+
+    //init vertex
+    printf("请输入顶点向量:\n");
+    for(int i=0; i<mg->vernum; i++) {
+        scanf("%c", &mg->vertex[i]); 
+        getchar();
+    }
+    
+    //init adjacency list
+    for(int i=0; i<mg->vernum; i++){
+        for(int j=0; j<mg->vernum; j++){
+            if(i == j){
+                mg->matrix[i][j].data = INT_MAX;
+                continue;
+            }
+            printf("向量%c到向量%c的权重(无:-1 有:具体值):\n", mg->vertex[i], mg->vertex[j]);
+            scanf("%d", &mg->matrix[i][j].data);
+            getchar();
+            if(mg->matrix[i][j].data == -1){
+                mg->matrix[i][j].data = INT_MAX;
+            }
+        }
+        printf("\n");
+    }
+    printf("=============LINE============\n");
+    printf("Digrahp:\n");
+    printAdjMatrix(mg);
+
+    return OK;
+
 }
 
 //创建无向图
