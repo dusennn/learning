@@ -7,7 +7,7 @@
 
 typedef int Status;
 typedef int VRType; //VRType: vertex relation type
-typedef int VertexType;
+typedef char VertexType;
 typedef char InfoType;
 
 //DG:有向图 DN:有向网 UDG:无向图 UDN:无向网
@@ -26,9 +26,47 @@ typedef struct{
     GraphKind kind; //图的类型
 }MGraph;
 
+void printAdjMatrix(MGraph *mg){
+    for(int i=0; i<mg->vernum; i++){
+        for(int j=0; j<mg->vernum; j++){
+            printf("%d  ", mg->matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
 //创建有向图
 Status createDG(MGraph *mg){
-    //TODO
+    printf("=============LINE============\n");
+    printf("请输入顶点数:\n");
+    scanf("%d", &mg->vernum);
+    getchar();
+    if(mg->vernum > MAX_VERTEX_NUM) return ERROR;
+    printf("请输入弧数:\n");
+    scanf("%d", &mg->arcnum);
+    getchar();
+    if(mg->arcnum > MAX_VERTEX_NUM) return ERROR;
+
+    //init vertex
+    printf("请输入顶点向量:\n");
+    for(int i=0; i<mg->vernum; i++) {
+        scanf("%c", &mg->vertex[i]); 
+        getchar();
+    }
+    
+    //init adjacency list
+    for(int i=0; i<mg->vernum; i++){
+        for(int j=0; j<mg->vernum; j++){
+            printf("向量:%c与向量:%c有无关联?[1:有 0:无]\n", mg->vertex[i], mg->vertex[j]);
+            scanf("%d", &mg->matrix[i][j].data);
+            getchar();
+        }
+    }
+    printf("=============LINE============\n");
+    printf("Digrahp:\n");
+    printAdjMatrix(mg);
+
+    return OK;
 }
 
 //创建有向网
@@ -49,6 +87,7 @@ Status createUDN(MGraph *mg){
 Status createGraph(MGraph *mg){
     printf("Choise Graph kind:\n1.Digraph\n2.Direct net\n3.Undigraph\n4.Undirect net\n");
     scanf("%d", &mg->kind);
+    getchar();//接收多余字符
     if(mg->kind == 1){
         createDG(mg);
     }else if(mg->kind == 2){
