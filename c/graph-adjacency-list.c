@@ -105,7 +105,7 @@ Status createDN(MGraph *mg){
                 mg->matrix[i][j].data = INT_MAX;
                 continue;
             }
-            printf("向量%c到向量%c的权重(无:-1 有:具体值):\n", mg->vertex[i], mg->vertex[j]);
+            printf("向量%c到向量%c的权(无:-1 有:具体值):\n", mg->vertex[i], mg->vertex[j]);
             scanf("%d", &mg->matrix[i][j].data);
             getchar();
             if(mg->matrix[i][j].data == -1){
@@ -115,7 +115,7 @@ Status createDN(MGraph *mg){
         printf("\n");
     }
     printf("=============LINE============\n");
-    printf("Digrahp:\n");
+    printf("Direct net:\n");
     printAdjMatrix(mg);
 
     return OK;
@@ -163,7 +163,44 @@ Status createUDG(MGraph *mg){
 
 //创建无向网
 Status createUDN(MGraph *mg){
-    //TODO
+    printf("=============LINE============\n");
+    printf("请输入顶点数:\n");
+    scanf("%d", &mg->vernum);
+    getchar();
+    if(mg->vernum > MAX_VERTEX_NUM) return ERROR;
+    printf("请输入弧数:\n");
+    scanf("%d", &mg->arcnum);
+    getchar();
+    if(mg->arcnum > MAX_VERTEX_NUM) return ERROR;
+
+    //init vertex
+    printf("请输入顶点向量:\n");
+    for(int i=0; i<mg->vernum; i++) {
+        scanf("%c", &mg->vertex[i]); 
+        getchar();
+    }
+    
+    //init adjacency list
+    for(int i=0; i<mg->vernum; i++){
+        for(int j=0; j<mg->vernum; j++){
+            if(i == j){
+                mg->matrix[i][j].data = INT_MAX;
+                continue;
+            }
+            printf("向量%c与向量%c间的权(无:-1 有:具体值):\n", mg->vertex[i], mg->vertex[j]);
+            scanf("%d", &mg->matrix[i][j].data);
+            getchar();
+            if(mg->matrix[i][j].data == -1){
+                mg->matrix[i][j].data = INT_MAX;
+            }
+        }
+        printf("\n");
+    }
+    printf("=============LINE============\n");
+    printf("Undirect net:\n");
+    printAdjMatrix(mg);
+
+    return OK;
 }
 
 Status createGraph(MGraph *mg){
