@@ -57,10 +57,15 @@ Status createDG(MGraph *mg){
     //init adjacency list
     for(int i=0; i<mg->vernum; i++){
         for(int j=0; j<mg->vernum; j++){
+            if(i == j){
+                mg->matrix[i][j].data = 0;
+                continue;
+            }
             printf("向量:%c与向量:%c有无关联?[1:有 0:无]\n", mg->vertex[i], mg->vertex[j]);
             scanf("%d", &mg->matrix[i][j].data);
             getchar();
         }
+        printf("\n");
     }
     printf("=============LINE============\n");
     printf("Digrahp:\n");
