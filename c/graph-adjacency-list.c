@@ -44,10 +44,7 @@ Status initLGraph(LGraph *lg){
     VRNode *vrnode = (VRNode *)malloc(sizeof(VRNode));
     if(!vrnode) exit(OVERFLOW);
     vrnode->next = NULL;
-    
-    //类似于多对多的关联
     vrnode->vl = vnode;
-    vnode->vrl = vrnode;
     lg->vl = vnode;
 
     //init other element
@@ -64,7 +61,6 @@ void printLGraph(LGraph lg){
     printf("kind: %d\n", lg.kind);
     printf("adjacency list:\n");
     VNode *vTarget = lg.vl;
-    printf("test\n");
     while(vTarget){
         printf("Vertex: %c [ ", vTarget->data);
         VRNode *vrTarget = vTarget->vrl;
@@ -124,7 +120,13 @@ Status createDG(LGraph *lg){
                 VNode *temp = (VNode *)malloc(sizeof(VNode));
                 temp->data = target2->data;
                 temp->next = NULL;
-                if(!target1->vrl->next){
+                if(!target1->vrl){
+                    VRNode *temp2 = (VRNode *)malloc(sizeof(VRNode));
+                    temp2->data = 1;
+                    temp2->vl = temp;
+                    temp2->next = NULL;
+                    target1->vrl = temp2;
+                }else if(!target1->vrl->next){
                     target1->vrl->data = 1;
                     target1->vrl->vl = temp; 
                 }else{
