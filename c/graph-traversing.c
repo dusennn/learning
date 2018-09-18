@@ -69,20 +69,31 @@ Status depthFristSearch(MGraph g){
     }
     visited[0] = TRUE; //begian point
     printf("%c->", g.data[0]);
-    for(int i=0; i<g.vernum; i++){
-        for(int j=0; j<g.vernum; j++){
+    int i,j;
+    i = 0;
+    while(i<g.vernum){
+        j = 0;
+        while(j<g.vernum){
             if(g.adj[i][j].data && !visited[j]){
                 visited[j] = TRUE;
                 printf("%c->", g.data[j]);
                 break;
             }
             if(j == g.vernum-1){
-                --i;
-                printf("%c->", g.data[i]);
-                continue;
+                printf("%c->", g.data[i-1]);
+                i-=2;
+                break;
             }
+            j++;
         }
-    }   
+        i++;
+        int flag = 1;
+        for(int n=0; n<g.vernum; n++){
+            if(!visited[n]) flag = 0;
+        }
+        if(flag) break;
+
+    }
     printf("\n");
     return OK;
 }
