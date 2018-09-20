@@ -24,23 +24,62 @@ typedef struct {
     QueuePre front,rear;
 }LQueue;
 
+//VRNode: vertex relation node
+typedef struct VRNode{
+    int adjvex; //该弧所指向的顶点的位置
+    VRType data; // 0 | 1 | weigth | ∞
+    struct VRNode *next; 
+}VRNode, *VRList;
 //VNode: vertex node
 typedef struct VNode{
     VType name; // vertex name
-    VInfo info; //vertex info
-}VNode, *VList;
-//VRNode: vertex relation node
-typedef struct VRNode{
-    VRType data; // 0 | 1 | weigth | ∞
-    VNode *vertex;
-    struct VRNode *next; 
-}VRNode, *VRList;
-typedef struct {
-    VList vl[VERTEX_MAX_NUM];
     VRList vrl;
+}VNode, *VList;
+
+typedef struct {
+    VNode *vertex[VERTEX_MAX_NUM];
+    VList vl;
     int vernum,arcnum;
     GraphKind kind;
-}LGrahp;
+}LGraph;
+
+Status createGraph(LGraph *lg){
+    printf("vernum:\n");
+    scanf("%d", &lg->vernum);
+    getchar();
+    if(lg->vernum > VERTEX_MAX_NUM) return ERROR;
+    printf("arcnum:\n");
+    scanf("%d", &lg->arcnum);
+    getchar();
+    printf("vertex:\n");
+    for(int i=0; i<lg->vernum; i++){
+        scanf("%c", lg->vertex[i]);
+    }
+    char c;
+    for(int i=0; i<lg->vernum; i++){
+        for(int j=0; j<lg->vernum; j++){
+            if(i == j) continue;
+            printf("%c connection %c?[Y/N]\n", lg->vertex[i]->name, lg->vertex[j]->name);
+            scanf("%c", &c);
+            if(c == 'Y' || c == 'y'){
+                if(!lg->vl){
+                    VNode *vnode = (VNode *)malloc(sizeof(VNode));
+                    vnode->name = lg->vertex[i]->name;
+                    VRNode *vrnode = (VRNode *)malloc(sizeof(VRNode));
+                    vrnode->adjvex = j;
+                    vrnode->data = 1;
+                    vrnode->next = NULL;
+
+                    vnode->vrl = vrnode;
+                    lg->vl = vnode;
+                }else{
+                    
+                }
+            
+            }
+        }
+    }   
+}
 
 Status initQueue(LQueue *lq){
     lq->front = lq->rear = (QueueNode *)malloc(sizeof(QueueNode));
@@ -88,5 +127,8 @@ int main(){
     printf("deQueue:%c\n", e);
     deQueue(&lq, &e);
     printf("deQueue:%c\n", e);
+
+    LGraph lg;
+    createGraph(&lg);
 
 }
