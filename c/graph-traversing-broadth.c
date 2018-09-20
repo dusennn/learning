@@ -24,21 +24,20 @@ typedef struct {
     QueuePre front,rear;
 }LQueue;
 
-//VRNode: vertex relation node
-typedef struct VRNode{
+typedef struct ArcNode{
     int adjvex; //该弧所指向的顶点的位置
     VRType data; // 0 | 1 | weigth | ∞
-    struct VRNode *next; 
-}VRNode, *VRList;
+    struct ArcNode *next; 
+}ArcNode, *ArcList;
+
 //VNode: vertex node
 typedef struct VNode{
     VType name; // vertex name
-    VRList vrl;
-}VNode, *VList;
+    ArcList arc;
+}VNode, AdjList[VERTEX_MAX_NUM];
 
 typedef struct {
-    VNode *vertex[VERTEX_MAX_NUM];
-    VList vl;
+    AdjList adj;
     int vernum,arcnum;
     GraphKind kind;
 }LGraph;
@@ -51,31 +50,34 @@ Status createGraph(LGraph *lg){
     printf("arcnum:\n");
     scanf("%d", &lg->arcnum);
     getchar();
+
     printf("vertex:\n");
     for(int i=0; i<lg->vernum; i++){
-        scanf("%c", lg->vertex[i]);
+        scanf("%c", &lg->adj[i].name);
+        getchar();
     }
+
     char c;
     for(int i=0; i<lg->vernum; i++){
         for(int j=0; j<lg->vernum; j++){
             if(i == j) continue;
-            printf("%c connection %c?[Y/N]\n", lg->vertex[i]->name, lg->vertex[j]->name);
+            printf("%c connection %c?[Y/N]\n", lg->adj[i].name, lg->adj[j].name);
             scanf("%c", &c);
+            getchar();
             if(c == 'Y' || c == 'y'){
-                if(!lg->vl){
-                    VNode *vnode = (VNode *)malloc(sizeof(VNode));
-                    vnode->name = lg->vertex[i]->name;
-                    VRNode *vrnode = (VRNode *)malloc(sizeof(VRNode));
-                    vrnode->adjvex = j;
-                    vrnode->data = 1;
-                    vrnode->next = NULL;
-
-                    vnode->vrl = vrnode;
-                    lg->vl = vnode;
+                ArcNode *anode = (ArcNode *)malloc(sizeof(ArcNode));
+                anode->adjvex = j;
+                anode->data = 1;
+                anode->next = NULL;
+                if(!lg->adj[i].arc){
+                    lg->adj[i].arc = anode;
                 }else{
-                    
+                    ArcNode *target = lg->adj[i].arc;
+                    while(target->next){
+                        target = target->next;
+                    }
+                    target->next = anode;
                 }
-            
             }
         }
     }   
@@ -119,16 +121,6 @@ Status deQueue(LQueue *lq, ElemType *e){
 int main(){
     LQueue lq;
     initQueue(&lq);
-
-    ElemType e;
-    enQueue(&lq, 'A');
-    enQueue(&lq, 'B');
-    deQueue(&lq, &e);
-    printf("deQueue:%c\n", e);
-    deQueue(&lq, &e);
-    printf("deQueue:%c\n", e);
-
     LGraph lg;
     createGraph(&lg);
-
 }
