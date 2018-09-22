@@ -6,8 +6,10 @@
 #define VERTEX_MAX_NUM 20
 #define INFINITY 2147483647 // max int
 #define OVERFLOW 0
+#define FALSE 0
+#define TRUE 1
 
-typedef char ElemType;
+typedef int ElemType;
 typedef char VType; //vertex type
 typedef char VInfo; //vertex info
 typedef int VRType; //vertex relation type
@@ -55,15 +57,17 @@ Status createGraph(LGraph *lg){
     for(int i=0; i<lg->vernum; i++){
         scanf("%c", &lg->adj[i].name);
         getchar();
+        lg->adj[i].arc = NULL;
     }
 
     char c;
     for(int i=0; i<lg->vernum; i++){
         for(int j=0; j<lg->vernum; j++){
             if(i == j) continue;
-            printf("%c connection %c?[Y/N]\n", lg->adj[i].name, lg->adj[j].name);
+            printf("%c connection %c?[Y/n]\n", lg->adj[i].name, lg->adj[j].name);
             scanf("%c", &c);
             getchar();
+
             if(c == 'Y' || c == 'y'){
                 ArcNode *anode = (ArcNode *)malloc(sizeof(ArcNode));
                 anode->adjvex = j;
@@ -79,8 +83,24 @@ Status createGraph(LGraph *lg){
                     target->next = anode;
                 }
             }
+
         }
     }   
+}
+
+void printGraph(LGraph lg){
+    printf("\nGraph List:\n");
+    for(int i=0; i<lg.vernum; i++){
+        if(!lg.adj[i].arc) continue;
+
+        printf("%c [ ", lg.adj[i].name);
+        ArcNode *target = lg.adj[i].arc;
+        while(target){
+            printf("->%c(%d) ", lg.adj[target->adjvex].name, target->data);
+            target = target->next;
+        }
+        printf("]\n");
+    }
 }
 
 Status initQueue(LQueue *lq){
@@ -104,23 +124,68 @@ Status enQueue(LQueue *lq, ElemType e){
 }
 
 Status deQueue(LQueue *lq, ElemType *e){
-    if(!lq->rear) return ERROR;
+    if(lq->front == lq->rear) return ERROR;
 
-    (*e) = lq->front->next->data;
     QueueNode *temp = lq->front->next;
-    if(lq->front->next = lq->rear){
-        lq->rear = lq->front;
+    (*e) = temp->data;
+    if(lq->front->next == lq->rear){
+        lq->front = lq->rear;
     }else{
         lq->front = lq->front->next;
     }
-    free(temp);
 
     return OK;
 }
 
+int queueLen(LQueue lq){
+    QueueNode *target = lq.front;
+    int count = 0;
+    while(target != lq.rear){
+        count++;
+        target = target->next;
+    }
+    return count;
+}
+
+//broaded first search
+Status search(LGraph lg, LQueue lq){
+    printf("init visite array...\n");
+    int visited[lg.vernum];
+    for(int i=0; i<lg.vernum; i++){
+        visited[i] = FALSE;
+    }
+
+    enQueue(&lq, 0);
+    printf("each: [");
+    while(lq.front != lq.rear){
+        ElemType e;
+        deQueue(&lq, &e);
+        visited[e] = TRUE;
+        printf("%c -> ", lg.adj[e].name);
+        ArcList temp = lg.adj[e].arc;
+        while(temp){
+            if(!visited[temp->adjvex]){
+                enQueue(&lq, temp->adjvex);
+            }
+            temp = temp->next;
+        }    
+    }
+    printf("]\n");
+
+    return OK;
+} 
+
 int main(){
+    printf("=============init queue=============\n");
     LQueue lq;
     initQueue(&lq);
+
+    printf("=============create graph:=============\n");
     LGraph lg;
     createGraph(&lg);
+    printGraph(lg);
+
+    printf("=============start search:=============\n");
+    search(lg, lq);
+
 }
