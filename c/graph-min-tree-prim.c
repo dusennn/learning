@@ -70,6 +70,7 @@ void printGraph(MGraph mg){
     }
 }
 
+//普里姆算法
 Status prim(MGraph mg){
     if(!mg.vernum) return ERROR;
 
