@@ -48,6 +48,8 @@ Status createGraph(MGraph *mg){
     mg->adj[3][1].data = 4;
     mg->adj[3][2].data = 9;
     mg->adj[3][3].data = INFINITY;
+
+    return OK;
 }
 
 void printGraph(MGraph mg){
@@ -68,9 +70,46 @@ void printGraph(MGraph mg){
     }
 }
 
+Status prim(MGraph mg){
+    if(!mg.vernum) return ERROR;
+
+    int visited[mg.vernum];
+    for(int i=0; i<mg.vernum; i++){
+        visited[i] = FALSE;
+    }
+
+    visited[0] = TRUE;
+    printf("Start: %c", mg.vertex[0]);
+
+    for(int i=0; i<mg.vernum; i++){
+
+        int min = INFINITY;
+        int index = 0;
+        for(int j=0; j<mg.vernum; j++){
+            if(min > mg.adj[i][j].data && !visited[j]){
+                min = mg.adj[i][j].data;
+                index = j;
+            }
+        }
+        
+        if(min == INFINITY && index == 0) return OK;
+
+        visited[index] = TRUE;
+        printf("->(%d)%c", min, mg.vertex[index]);
+        i = index;
+    }
+    printf("\n");
+
+    return OK;
+}
+
 int main(){
     MGraph mg;
     createGraph(&mg);
     printGraph(mg);
+    
+    printf("========= PRIM =========\n");
+    prim(mg);
+
     return 0;
 }
