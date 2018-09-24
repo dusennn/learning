@@ -102,6 +102,27 @@ Status createEdges(MGraph mg, Edges eg){
     }
 }
 
+Status sortedEdges(Edges eg, int len){
+    int begin, end, weight;
+    for(int i=0; i<len; i++){
+        for(int j=i; j<len; j++){
+            if(eg[i].weight > eg[j].weight){
+                begin = eg[i].begin;
+                end = eg[i].end;
+                weight = eg[i].weight;
+                eg[i].begin = eg[j].begin;
+                eg[i].end = eg[j].end;
+                eg[i].weight = eg[j].weight;
+                eg[j].begin = begin;
+                eg[j].end = end;
+                eg[j].weight = weight;
+            }
+        }
+    }
+
+    return OK;
+}
+
 Status printEdges(Edges eg, int len){
     printf("========== Edges: ==========\n");
     for(int i=0; i<len; i++){
@@ -121,6 +142,8 @@ int main(){
     printGraph(mg);
     Edges eg;
     createEdges(mg, eg);
+    printEdges(eg, mg.arcnum);
+    sortedEdges(eg, mg.arcnum);
     printEdges(eg, mg.arcnum);
 
     printf("========= Kruskal =========\n");
