@@ -130,9 +130,30 @@ Status printEdges(Edges eg, int len){
     }
 }
 
+int visited(int *parent, int i){
+    while(parent[i] > 0){
+        i = parent[i];
+    }
+    return i;
+}
+
 //克鲁斯卡尔算法
-Status kurskal(MGraph mg){
-    
+Status kurskal(MGraph mg, Edges eg){
+    int parent[mg.vernum];
+    for(int i=0; i<mg.vernum; i++){
+        parent[i] = FALSE;
+    }
+
+    int m,n;
+    for(int i=0; i<mg.arcnum; i++){
+        m = visited(parent, eg[i].begin);
+        n = visited(parent, eg[i].end);
+
+        if(m != n){
+            parent[m] = n;
+            printf("(%d %d)%d\n", eg[i].begin, eg[i].end, eg[i].weight);
+        }
+    }
     return OK;
 }
 
@@ -142,11 +163,11 @@ int main(){
     printGraph(mg);
     Edges eg;
     createEdges(mg, eg);
-    printEdges(eg, mg.arcnum);
     sortedEdges(eg, mg.arcnum);
     printEdges(eg, mg.arcnum);
 
     printf("========= Kruskal =========\n");
+    kurskal(mg, eg);
 
     return 0;
 }
