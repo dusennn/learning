@@ -28,8 +28,8 @@ typedef struct{
     int vernum,arcnum;
 }LGraph;
 
-//create digraph
-Status createDGraph(LGraph *lg){
+//create activity on vertex network
+Status createAOV(LGraph *lg){
     lg->vernum = 5;
     lg->arcnum = 5;
 
@@ -85,8 +85,8 @@ Status generateIn(LGraph *lg){
     return OK;
 }
 
-void printDGraph(LGraph lg){
-    printf("========== Digraph: ==========\n");
+void printAOV(LGraph lg){
+    printf("========== Activity On Vertex Network: ==========\n");
     printf("vernum: %d\n", lg.vernum);
     printf("arcnum: %d\n", lg.arcnum);
     printf("vertex: ");
@@ -138,9 +138,9 @@ Status topo(LGraph lg){
 
 int main(){
     LGraph lg;
-    createDGraph(&lg);
+    createAOV(&lg);
     generateIn(&lg);
-    printDGraph(lg);
+    printAOV(lg);
 
     topo(lg);
 
