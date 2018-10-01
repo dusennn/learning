@@ -3,6 +3,8 @@
 
 #define ERROR -1
 #define OK 1
+#define TRUE 1
+#define FALSE 0
 #define OVERFLOW 0
 #define INFINITY 65535
 #define VERTEX_MAX_NUM 20
@@ -104,11 +106,43 @@ void printDGraph(LGraph lg){
     }
 }
 
+// topological sorting
+Status topo(LGraph lg){
+    printf("========== TOPO SORT ==========\n");
+    while(TRUE){
+        int flag = TRUE;
+        for(int i=0; i<lg.vernum; i++){
+            if(lg.adj[i].in == 0){
+                flag = FALSE;
+            }
+        }
+        if(flag) break;
+
+        for(int i=0; i<lg.vernum; i++){
+            if(lg.adj[i].in == 0){
+                printf("%c ", lg.adj[i].name);
+                ArcNode *target = lg.adj[i].arc;
+                while(target){
+                    lg.adj[target->adjvex].in--;
+                    target = target->next;
+                }
+                lg.adj[i].arc = NULL;
+                lg.adj[i].in = -1;
+            }
+        }
+    }
+    printf("\n");
+    
+    return OK;
+}
+
 int main(){
     LGraph lg;
     createDGraph(&lg);
     generateIn(&lg);
     printDGraph(lg);
+
+    topo(lg);
 
     return 0;
 }
