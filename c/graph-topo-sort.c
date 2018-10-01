@@ -18,6 +18,7 @@ typedef struct ArcNode{
 }ArcNode, *ArcList;
 typedef struct VNode{
     VertexType name;
+    int in; //入度
     ArcList arc;
 }VNode, AdjList[VERTEX_MAX_NUM];
 typedef struct{
@@ -35,6 +36,12 @@ Status createDGraph(LGraph *lg){
     lg->adj[2].name = 'C';
     lg->adj[3].name = 'D';
     lg->adj[4].name = 'E';
+
+    lg->adj[0].in = 0;
+    lg->adj[1].in = 0;
+    lg->adj[2].in = 0;
+    lg->adj[3].in = 0;
+    lg->adj[4].in = 0;
 
     ArcNode *node00 = (ArcNode *)malloc(sizeof(ArcNode));
     node00->adjvex = 1;
@@ -64,6 +71,18 @@ Status createDGraph(LGraph *lg){
     return OK;
 }
 
+//生成入度
+Status generateIn(LGraph *lg){
+    for(int i=0; i<lg->vernum; i++){
+        ArcNode *target = lg->adj[i].arc;
+        while(target){
+            lg->adj[target->adjvex].in++;
+            target = target->next;
+        }
+    }
+    return OK;
+}
+
 void printDGraph(LGraph lg){
     printf("========== Digraph: ==========\n");
     printf("vernum: %d\n", lg.vernum);
@@ -75,7 +94,7 @@ void printDGraph(LGraph lg){
     printf("\n");
     printf("adj list:\n");
     for(int i=0; i<lg.vernum; i++){
-        printf("\t%c [ ", lg.adj[i].name);
+        printf("\t%d %c [ ", lg.adj[i].in, lg.adj[i].name);
         ArcNode *target = lg.adj[i].arc;
         while(target){
             printf("%c, ", lg.adj[target->adjvex].name);
@@ -88,6 +107,7 @@ void printDGraph(LGraph lg){
 int main(){
     LGraph lg;
     createDGraph(&lg);
+    generateIn(&lg);
     printDGraph(lg);
 
     return 0;
