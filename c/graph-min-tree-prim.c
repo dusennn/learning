@@ -9,14 +9,14 @@
 
 typedef int Status;
 typedef int ArcType;
-typedef char VertexType;
+typedef char VertexName;
 
 typedef struct ArcCell{
     ArcType data;
 }ArcCell, AdjMatrix[MAX_VERTEX_NUM][MAX_VERTEX_NUM];
 // 连通图
 typedef struct {
-    VertexType vertex[MAX_VERTEX_NUM];
+    VertexName vertex[MAX_VERTEX_NUM];
     AdjMatrix adj;
     int vernum, arcnum;
 }MGraph;

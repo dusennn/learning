@@ -10,7 +10,7 @@
 #define VERTEX_MAX_NUM 20
 
 typedef int Status;
-typedef char VertexType;
+typedef char VertexName;
 typedef int ArcType;
 
 typedef struct ArcNode{
@@ -19,7 +19,7 @@ typedef struct ArcNode{
     struct ArcNode *next;
 }ArcNode, *ArcList;
 typedef struct VNode{
-    VertexType name;
+    VertexName name;
     int in; //入度
     ArcList arc;
 }VNode, AdjList[VERTEX_MAX_NUM];

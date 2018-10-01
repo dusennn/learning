@@ -8,7 +8,7 @@
 
 typedef int Status;
 typedef int VRType; //VRType: vertex relation type
-typedef char VertexType;
+typedef char VertexName;
 typedef char InfoType;
 
 //DG:有向图 DN:有向网 UDG:无向图 UDN:无向网
@@ -21,7 +21,7 @@ typedef struct VerCell{
 }VerCell, AdjMatrix[MAX_VERTEX_NUM][MAX_VERTEX_NUM];
 
 typedef struct{
-    VertexType vertex[MAX_VERTEX_NUM]; //顶点向量
+    VertexName vertex[MAX_VERTEX_NUM]; //顶点向量
     AdjMatrix matrix; //邻接矩阵
     int vernum,arcnum; //图的当前顶点数和弧数
     GraphKind kind; //图的类型
