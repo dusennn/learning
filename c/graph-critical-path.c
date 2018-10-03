@@ -11,6 +11,7 @@
 typedef int Status;
 typedef char VertexName;
 typedef char VertexType;
+typedef int ElemType;
 
 typedef struct ArcNode{
     int adjvex;
@@ -26,6 +27,12 @@ typedef struct{
     VList adj;
     int vernum,arcnum;
 }LGraph;
+
+//etv: 事件最早发生时间
+//ltv: 事件最晚发生时间
+//ete: 活动最早开始时间
+//lte: 活动最晚发生时间
+int *etv, *ltv, *ete, *lte;
 
 //create activity on edge network
 Status createAOE(LGraph *lg){
@@ -108,6 +115,11 @@ void printAOE(LGraph lg){
         }
         printf("]\n");
     }
+}
+
+//criticla path
+Status cp(LGraph lg){
+
 }
 
 int main(){
