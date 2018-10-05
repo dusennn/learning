@@ -34,7 +34,6 @@ Status find(BinTree tree, ElemType key){
     }
 }
 
-//create binary sort tree
 Status insert(BinTree tree, ElemType e){
     if(!tree->data){
         tree->data = e;
@@ -64,6 +63,53 @@ Status insert(BinTree tree, ElemType e){
             node->lchild = node->rchild = NULL;
             tree->rchild = node;
             return OK;
+        }
+    }
+}
+
+Status delete(BinTree tree, TNode *pre, ElemType key){
+    if(!tree) return ERROR;
+    if(!find(tree, key)) return ERROR;
+
+    if(tree->data == key){
+        //情况1：要删除节点为叶子结点
+        if(!tree->lchild && !tree->rchild){
+            if(pre->lchild->data == key){
+                pre->lchild = NULL;
+                return OK;
+            }
+            if(pre->rchild->data == key){
+                pre->rchild = NULL;
+                return OK;
+            }
+        //情况2：要删除节点只有左子树
+        }else if(tree->lchild){
+            pre->lchild = pre->lchild->lchild;
+            return OK;
+        //情况3：要删除节点只有右子树
+        }else if(tree->rchild){
+            pre->rchild = pre->rchild->rchild;
+            return OK;
+        //情况4：要删除节点既有左子树又有右子树
+        }else{
+            //方法1：寻找左子树上与当前值最接近的节点，
+            //把找到的节点的值替换到该节点，并删除找到
+            //的节点
+            TNode *temp = tree->lchild;
+            if(!temp->rchild){
+                temp->rchild = tree->rchild;
+                if(pre->lchild->data == key){
+                    pre->lchild = temp;
+                }
+                if(pre->rchild->data == key){
+                    pre->rchild = temp;
+                }
+            }else
+            while(temp->rchild){
+                temp = temp->rchild;
+            }
+            
+            //方法2：寻找右子树上...
         }
     }
 }
