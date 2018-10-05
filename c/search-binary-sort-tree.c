@@ -55,6 +55,16 @@ Status createBinSortTree(BinTree tree, int *data, int index){
     return OK;
 }
 
+//preorder traversal
+Status preTraversal(BinTree tree){
+    if(tree){
+        preTraversal(tree->lchild); 
+        printf("%d->", tree->data);
+        preTraversal(tree->rchild); 
+    }
+    return OK;
+}
+
 int main(){
     BinTree tree;
     init(&tree);
@@ -64,6 +74,8 @@ int main(){
 
     int index = 1;
     createBinSortTree(tree, data, index);
+    preTraversal(tree);
+    printf("\n");
 
     return 0;
 }
