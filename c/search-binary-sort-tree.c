@@ -67,13 +67,12 @@ Status find(BinTree tree, ElemType key){
     }
 }
 
-
-//preorder traversal
-Status preTraversal(BinTree tree){
+//midorder traversal
+Status midTraversal(BinTree tree){
     if(tree){
-        preTraversal(tree->lchild); 
+        midTraversal(tree->lchild); 
         printf("%d->", tree->data);
-        preTraversal(tree->rchild); 
+        midTraversal(tree->rchild); 
     }
     return OK;
 }
@@ -88,8 +87,8 @@ int main(){
     int index = 1;
     createBinSortTree(tree, data, index);
 
-    printf("Preorder Traversal:\n");
-    preTraversal(tree);
+    printf("Midorder Traversal:\n");
+    midTraversal(tree);
     printf("\n");
     
     Status s;
