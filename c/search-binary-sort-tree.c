@@ -55,6 +55,19 @@ Status createBinSortTree(BinTree tree, int *data, int index){
     return OK;
 }
 
+Status find(BinTree tree, ElemType key){
+    if(tree){
+        if(key == tree->data){
+            return OK;
+        }else if(key < tree->data){
+            find(tree->lchild, key);
+        }else{
+            find(tree->rchild, key);
+        }
+    }
+}
+
+
 //preorder traversal
 Status preTraversal(BinTree tree){
     if(tree){
@@ -74,8 +87,15 @@ int main(){
 
     int index = 1;
     createBinSortTree(tree, data, index);
+
+    printf("Preorder Traversal:\n");
     preTraversal(tree);
     printf("\n");
+    
+    Status s;
+    ElemType e = 67;
+    s = find(tree, e); 
+    printf("Status:%d\n", s);
 
     return 0;
 }
