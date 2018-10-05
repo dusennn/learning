@@ -18,13 +18,33 @@ Status init(BinTree *tree){
     if(!(*tree)) exit(OVERFLOW);
 
     (*tree)->lchild = (*tree)->rchild = NULL;
-    (*tree)->data = 0;
 
     return OK;
 }
 
+Status find(BinTree tree, ElemType key){
+    if(tree){
+        if(key == tree->data){
+            return OK;
+        }else if(key < tree->data){
+            find(tree->lchild, key);
+        }else{
+            find(tree->rchild, key);
+        }
+    }
+}
+
 //create binary sort tree
 Status insert(BinTree tree, ElemType e){
+    if(!tree->data){
+        tree->data = e;
+        return OK;
+    }
+    
+    if(find(tree, e)){
+        return OK;
+    }
+
     if(e < tree->data){
         if(tree->lchild){
             insert(tree->lchild, e);   
@@ -47,24 +67,12 @@ Status insert(BinTree tree, ElemType e){
         }
     }
 }
+
 Status createBinSortTree(BinTree tree, int *data, int index){
-    tree->data = data[index];
-    for(int i=index+1; i<=data[0]; i++){
+    for(int i=index; i<=data[0]; i++){
         insert(tree, data[i]);
     }
     return OK;
-}
-
-Status find(BinTree tree, ElemType key){
-    if(tree){
-        if(key == tree->data){
-            return OK;
-        }else if(key < tree->data){
-            find(tree->lchild, key);
-        }else{
-            find(tree->rchild, key);
-        }
-    }
 }
 
 //midorder traversal
@@ -77,6 +85,12 @@ Status midTraversal(BinTree tree){
     return OK;
 }
 
+void print(BinTree tree){
+    printf("Midorder Traversal:\n");
+    midTraversal(tree);
+    printf("\n");
+}
+
 int main(){
     BinTree tree;
     init(&tree);
@@ -86,15 +100,16 @@ int main(){
 
     int index = 1;
     createBinSortTree(tree, data, index);
+    print(tree);
 
-    printf("Midorder Traversal:\n");
-    midTraversal(tree);
-    printf("\n");
-    
     Status s;
     ElemType e = 67;
     s = find(tree, e); 
-    printf("Status:%d\n", s);
-
+    printf("Status(find):%d\n", s);
+    
+    s = insert(tree, 110);
+    printf("Status(insert):%d\n", s);
+    print(tree);
+    
     return 0;
 }
