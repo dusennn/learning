@@ -67,54 +67,70 @@ Status insert(BinTree tree, ElemType e){
 	}
 }
 
-Status delete(BinTree tree, TNode *pre, ElemType key){
+Status delete(BinTree tree, BinTree pre, ElemType key){
 	if(!tree) return ERROR;
 	if(!find(tree, key)) return ERROR;
 
 	if(tree->data == key){
 		//情况1：要删除节点为叶子结点
 		if(!tree->lchild && !tree->rchild){
-			if(pre->lchild->data == key){
+			if(pre->lchild == tree){
 				pre->lchild = NULL;
 				return OK;
 			}
-			if(pre->rchild->data == key){
+			if(pre->rchild == tree){
 				pre->rchild = NULL;
 				return OK;
 			}
-			//情况2：要删除节点只有左子树
-		}else if(tree->lchild){
-			pre->lchild = pre->lchild->lchild;
-			return OK;
-			//情况3：要删除节点只有右子树
-		}else if(tree->rchild){
-			pre->rchild = pre->rchild->rchild;
-			return OK;
-			//情况4：要删除节点既有左子树又有右子树
-		}else{
+
+		//情况2：要删除节点既有左子树又有右子树
+		}else if(tree->lchild && tree->rchild){
 			//方法1：寻找左子树上与当前值最接近的节点，
 			//把找到的节点的值替换到该节点，并删除找到
 			//的节点
-			TNode *temp = tree->lchild;
-			if(!temp->rchild){
-				temp->rchild = tree->rchild;
-			}else if(!temp->rchild->rchild){
-				temp->rchild->rchild = tree->rchild;
-			}else{
-				while(temp->rchild->rchild){
-					temp = temp->rchild;
+			TNode *temp1 = tree->lchild;
+			if(temp1->rchild){
+				if(temp1->rchild->rchild){
+					TNode *temp2 = temp1;
+					while(temp2->rchild->rchild){
+						temp2 = temp2->rchild;
+					}
+					tree->data = temp2->rchild->rchild->data;
+					temp2->rchild->rchild = NULL;
+				}else{
+					tree->data = temp1->rchild->data;
+					temp1->rchild = NULL;
 				}
-				temp->rchild = tree->rchild;
-			}
-
-			if(pre->lchild->data == key){
-				pre->lchild = temp;
-			}
-			if(pre->rchild->data == key){
-				pre->rchild = temp;
+			}else{
+				tree->data = temp1->data;
+				if(temp1->lchild){
+					tree->lchild = temp1->lchild;
+				}else{
+					tree->lchild = NULL;
+				}
 			}
 			//方法2：寻找右子树上...
 			//...
+			return OK;
+
+		//情况3：要删除节点只有左子树
+		}else if(tree->lchild){
+			if(pre->lchild == tree){
+				pre->lchild = pre->lchild->lchild;
+			}
+			if(pre->rchild == tree){
+				pre->rchild = pre->rchild->lchild;
+			}
+			return OK;
+
+		//情况4：要删除节点只有右子树
+		}else{
+			if(pre->lchild == tree){
+				pre->lchild = pre->lchild->rchild;
+			}
+			if(pre->rchild == tree){
+				pre->rchild = pre->rchild->rchild;
+			}
 			return OK;
 		}
 	}else if(key < tree->data){
@@ -169,9 +185,9 @@ int main(){
 	printf("Status(insert):%d\n", s);
 	print(tree);
 
-	s = delete(tree, NULL, 109);
+	s = delete(tree, tree, 70);
 	printf("Status(delete):%d\n", s);
-	print(tree);
+	print(tree);	
 
 	return 0;
 }
