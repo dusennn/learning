@@ -41,6 +41,26 @@ Status merge_1(int list[], int len){
 			list[m] = temp[m]; 
 		}
 	}
+
+	return OK;
+}
+
+//迭代排序
+Status merge_2(int list[], int len){
+	int i, j, temp;
+	
+	for(i=0; i<len; i+=2){
+		for(j=0; j<len; j+=2){
+			if(list[j+1] < list[j]){
+				temp = list[j];
+				list[j] = list[j+1];
+				list[j+1] = temp;
+				//UNDO
+			}
+		}
+	}
+
+	return OK;
 }
 
 void print(int list[], int len){
@@ -54,7 +74,10 @@ void print(int list[], int len){
 int main(){
 	int len=10, list[10] = {20, 1, 3, 34, 5, 2, 8, 20, 14, 90};
 	print(list, len);
-	merge_1(list, len);
+	//merge_1(list, len);
+	//print(list, len);
+
+	merge_2(list, len);
 	print(list, len);
 
 	return 0;
