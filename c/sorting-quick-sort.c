@@ -50,11 +50,33 @@ int partition_2(int list[], int low, int high){
 	return low;
 }
 
+//优化2：减少不必要的交换
+int partition_3(int list[], int low, int high){
+	int pointkey, mid;
+	mid = low + (high-low)/2;
+	if(list[low] > list[high]) swap(list, low, high);
+	if(list[mid] > list[high]) swap(list, mid, high);
+	if(list[mid] > list[low]) swap(list, mid, low);
+
+	pointkey = list[low];
+	while(low < high){
+		while(low < high && list[high] >= pointkey) high--;
+		list[low] = list[high];
+		
+		while(low < high && list[low] <= pointkey) low++;
+		list[high] = list[low];
+	}
+	list[low] = pointkey;
+
+	return low;
+}
+
 Status quick(int list[], int low, int high){
 	if(low < high){
 		int point;
 		//point = partition(list, low, high);
-		point = partition_2(list, low, high);
+		//point = partition_2(list, low, high);
+		point = partition_3(list, low, high);
 
 		//上述操作把list以point为中心分为两块
 		//对比 point 小的一部分数据进行排序
