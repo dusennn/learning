@@ -85,6 +85,16 @@ Status subPrint(BiTree t){
     }
 }
 
+// count high
+int high(BiTree tree){
+	if(tree){
+		int lhigh, rhigh;
+		lhigh = high(tree->lchild) + 1;
+		rhigh = high(tree->rchild) + 1;
+		return lhigh > rhigh ? lhigh:rhigh; 
+	}
+}
+
 int main(){
     BiTree t = initTree();
     createTree(t);
@@ -99,5 +109,6 @@ int main(){
     printf("后序遍历: \n");
     subPrint(t);
     printf("\n");
-    return 0;
+
+	printf("Tree High: %d \n", high(t));
 }
