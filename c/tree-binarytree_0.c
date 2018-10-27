@@ -95,6 +95,21 @@ int high(BiTree tree){
 	}
 }
 
+void convert(BiTree *t, char arr[], int index, int len){
+	if(index < len){
+		(*t) = (BiTNode *)malloc(sizeof(BiTNode));
+		(*t)->data = arr[index];
+		convert(&((*t)->lchild), arr, 2 * index + 1, len);
+		convert(&((*t)->rchild), arr ,2 * index + 2, len);
+	}
+}
+
+//顺序存储 to 链式存储
+Status conversion(BiTree *t, char arr[], int len){
+	convert(t ,arr, 0, len);	
+	return OK;
+}
+
 int main(){
     BiTree t = initTree();
     createTree(t);
@@ -111,4 +126,11 @@ int main(){
     printf("\n");
 
 	printf("Tree High: %d \n", high(t));
+	
+	printf("conversion:\n");
+	BiTree t2 = NULL;
+	char arr[] = {'A', 'B', 'C', 'D', 'E', 'F'};
+	conversion(&t2, arr, 6);
+	midPrint(t2);
+	printf("\n");
 }
