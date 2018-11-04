@@ -4,7 +4,10 @@
 
 #define ERROR -1
 #define OK 1
+#define TRUE 1
+#define FALSE 0
 
+typedef int Boolean;
 typedef int Status;
 typedef char ElemType;
 typedef struct BiTNode{
@@ -110,6 +113,17 @@ Status conversion(BiTree *t, char arr[], int len){
 	return OK;
 }
 
+//计算树的高度
+int layer(BiTree t){
+	int i, j;
+	if(t){
+		i = layer(t->rchild) + 1;
+		j = layer(t->lchild) + 1;
+		return i > j ? i : j;
+	}
+	return 0;
+}
+
 int main(){
     BiTree t = initTree();
     createTree(t);
@@ -133,4 +147,8 @@ int main(){
 	conversion(&t2, arr, 6);
 	midPrint(t2);
 	printf("\n");
+
+	printf("layer:\n");
+	int l = layer(t);
+	printf("%d\n", l);
 }
