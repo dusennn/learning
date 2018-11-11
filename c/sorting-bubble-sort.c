@@ -20,7 +20,8 @@ typedef struct{
 }SqList;
 
 Status init(SqList *l){
-	int data[8] = {12, 2, 3, 34, 23, 6, 4, 9};
+	//int data[8] = {12, 2, 3, 34, 23, 6, 4, 9};
+	int data[8] = {1, 2, 3, 4, 5, 6, 7, 8};
 	l->len = 8;
 	for(int i=0; i<l->len; i++){
 		l->n[i].data = data[i];
@@ -87,9 +88,9 @@ Status bubble_3(SqList *l){
 	int c1=0, c2=0, flag = TRUE;
 
 	for(int i=0; i<l->len && flag; i++){
+		flag = FALSE;
 		for(int j=l->len-1; j>i; j--){
 			c1++;
-			flag = FALSE;
 			if(l->n[j].data < l->n[j-1].data){
 				c2++;
 				ElemType temp;
