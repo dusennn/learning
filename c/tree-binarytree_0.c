@@ -124,6 +124,22 @@ int layer(BiTree t){
 	return 0;
 }
 
+//找兄弟节点
+BiTNode* brotherNode(BiTree t, BiTNode *q){
+	if(t){
+		if(t->lchild == q){
+			return t->rchild;
+		}
+		if(t->rchild == q){
+			return t->lchild;
+		}
+
+		brotherNode(t->rchild, q);
+		brotherNode(t->lchild, q);
+	}
+}
+
+
 int main(){
     BiTree t = initTree();
     createTree(t);
@@ -151,4 +167,10 @@ int main(){
 	printf("layer:\n");
 	int l = layer(t);
 	printf("%d\n", l);
+	
+	printf("brother:\n");
+	BiTNode *q = t->lchild->rchild;
+	BiTNode *temp = brotherNode(t, q);
+	printf("%c\n", temp->data);
+	
 }
