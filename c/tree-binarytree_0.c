@@ -4,8 +4,8 @@
 
 #define ERROR -1
 #define OK 1
-#define TRUE 1
-#define FALSE 0
+#define True 1
+#define False 0
 
 typedef int Boolean;
 typedef int Status;
@@ -34,6 +34,13 @@ Status createTree(BiTree t){
     BiTNode *lchild2, *rchild2;
     lchild2 = (BiTNode *)malloc(sizeof(BiTNode));
     lchild2->data = 'D';
+	
+	//判断平衡二叉树专用代码片段
+	BiTNode *lchild3 = (BiTNode *)malloc(sizeof(BiTNode));
+	lchild3->data = 'F';
+	lchild3->lchild = lchild3->rchild = NULL;
+	lchild2->lchild = lchild3;
+
     rchild2 = (BiTNode *)malloc(sizeof(BiTNode));
     rchild2->data = 'E';
     lchild->lchild = lchild2;
@@ -140,6 +147,21 @@ BiTNode* brotherNode(BiTree t, BiTNode *q){
 }
 
 
+//判断二叉树是否平衡
+Status isBalanced(BiTree t, int *h){//h: 记录树的高度
+	if(!t) return True; 
+	
+	int left, right;
+	left = right = 0;
+	if(!isBalanced(t->lchild, &left)) return False;
+	if(!isBalanced(t->rchild, &right)) return False;
+
+	if(left - right > 1 || right - left > 1) return False;
+
+	*h = (left > right ? left : right ) + 1; 
+	return True;
+}
+
 int main(){
     BiTree t = initTree();
     createTree(t);
@@ -173,4 +195,9 @@ int main(){
 	BiTNode *temp = brotherNode(t, q);
 	printf("%c\n", temp->data);
 	
+	Status s;
+	printf("IsBalanced:\n");
+	s = isBalanced(t, &l);
+	printf("%s\n", s?"是":"否");
+
 }
