@@ -1,5 +1,10 @@
 # Upgrade pip: pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade pip
 # Install with: pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
-Flask == 1.0.2
+
+wheel==0.32.3
+
+#flask
+Flask==1.0.2
+Flask-Script==2.0.6
 
 
