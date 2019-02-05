@@ -1,3 +1,4 @@
 c/*.out
 */VENV
+*/__pycache__
 
