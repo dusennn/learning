@@ -20,12 +20,12 @@ class TitanicDataset(Dataset):
         )
         xy['Age'].fillna(xy['Age'].mean(), inplace=True)
         self.len = xy.shape[0]
-        self.x_data = torch.tensor(xy['Survived'].values)
-        self.y_data = torch.tensor(xy[['Pclass','Sex','Age','SibSp','Parch','Fare','Embarked']].values, 
+        self.x_data = torch.tensor(xy[['Pclass','Sex','Age','SibSp','Parch','Fare','Embarked']].values,
             dtype=torch.float32
         )
+        self.y_data = torch.tensor(xy['Survived'].values)
 
-    def __getitems__(self, index):
+    def __getitem__(self, index):
         return self.x_data[index], self.y_data[index]
 
     def __len__(self):
@@ -35,10 +35,10 @@ class TitanicDataset(Dataset):
 class TitanicModel(torch.nn.Module):
     def __init__(self):
         super(TitanicModel, self).__init__()
-        self.linear1 = torch.nn.Linear(11, 9)
-        self.linear2 = torch.nn.Linear(9, 6)
-        self.linear3 = torch.nn.Linear(6, 3)
-        self.linear4 = torch.nn.Linear(3, 1)
+        self.linear1 = torch.nn.Linear(7, 6)
+        self.linear2 = torch.nn.Linear(6, 4)
+        self.linear3 = torch.nn.Linear(4, 2)
+        self.linear4 = torch.nn.Linear(2, 1)
         self.activate = torch.nn.ReLU()
 
     def forward(self, x):
@@ -51,17 +51,17 @@ class TitanicModel(torch.nn.Module):
 
 def run():
     dataset = TitanicDataset('titanic/dataset/train.csv')
-    data_loader = DataLoader(dataset=dataset, batch_size=32, shuffle=True, num_workers=2)
+    train_loader = DataLoader(dataset=dataset, batch_size=32, shuffle=True, num_workers=2)
 
     model = TitanicModel()
 
-    criterion = torch.nn.BCELoss()
+    criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
     loss_list = []
     epoch_list = []
-    for epoch in range(100):
-        for i, (inputs, labels) in enumerate(data_loader, 0):
+    for epoch in range(1000):
+        for i, (inputs, labels) in enumerate(train_loader, 0):
             #1.Forward
             y_pred = model(inputs)
             loss = criterion(y_pred, labels)
@@ -73,7 +73,6 @@ def run():
             loss.backward()
             #3.Update
             optimizer.step()
-
     
     plt.plot(epoch_list, loss_list)
     plt.xlabel('Epoch')
