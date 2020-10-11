@@ -9,6 +9,7 @@ from torchvision import (transforms, datasets, )
 from torch.utils.data import (Dataset, DataLoader, )
 from mnist.nn.nnet import NNet
 from mnist.nn.cnnet import (CNNet, CNNet2, )
+from mnist.nn.googlenet import (GoogLeNet, )
 
 class MnistModel(object):
     def __init__(self):
@@ -47,7 +48,8 @@ class MnistModel(object):
     def __build_net(self):
         # self.nnet = NNet()
         # self.nnet = CNNet()
-        self.nnet = CNNet2()
+        # self.nnet = CNNet2()
+        self.nnet = GoogLeNet()
         self.nnet.to(self.device)
 
     def __criterion_and_optimizer(self):
