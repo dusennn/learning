@@ -55,7 +55,7 @@ class MnistModel(object):
         self.__build_net()
         self.__criterion_and_optimizer()
 
-        for epoch in range(1, 3):
+        for epoch in range(1, 100):
             self.__train(epoch)
             self.__test(epoch)
         
