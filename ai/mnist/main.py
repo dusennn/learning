@@ -1,5 +1,4 @@
 import torch
-import torch.functional as F
 
 from torchvision import (transforms, datasets, )
 from torch.utils.data import (Dataset, DataLoader, )
