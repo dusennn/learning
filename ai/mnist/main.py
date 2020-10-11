@@ -1,82 +1,14 @@
+import os, sys
+sys.path.append(os.getcwd())
+
 import torch
 import matplotlib.pyplot as plt
 
 from datetime import datetime
 from torchvision import (transforms, datasets, )
 from torch.utils.data import (Dataset, DataLoader, )
-
-
-class NNet(torch.nn.Module):
-    def __init__(self):
-        super(NNet, self).__init__()
-        self.linear1 = torch.nn.Linear(784, 512)
-        self.linear2 = torch.nn.Linear(512, 256)
-        self.linear3 = torch.nn.Linear(256, 128)
-        self.linear4 = torch.nn.Linear(128, 64)
-        self.linear5 = torch.nn.Linear(64, 32)
-        self.linear6 = torch.nn.Linear(32, 10)
-        self.activate = torch.nn.ReLU()
-
-    def forward(self, x):
-        x = x.view(-1, 784)
-        x = self.activate(self.linear1(x))
-        x = self.activate(self.linear2(x))
-        x = self.activate(self.linear3(x))
-        x = self.activate(self.linear4(x))
-        x = self.activate(self.linear5(x))
-        return self.linear6(x)
-
-class CNNet(torch.nn.Module):
-    def __init__(self):
-        super(CNNet, self).__init__()
-        self.conv1 = torch.nn.Conv2d(1, 10, kernel_size=5)
-        self.conv2 = torch.nn.Conv2d(10, 20, kernel_size=5)
-        self.pooling = torch.nn.MaxPool2d(2)
-        self.fc1 = torch.nn.Linear(320, 160)
-        self.fc2 = torch.nn.Linear(160, 80)
-        self.fc3 = torch.nn.Linear(80, 10)
-        self.relu = torch.nn.ReLU()
-    
-    def forward(self, x):
-        batch_size = x.size(0)
-        x = self.pooling(self.relu(self.conv1(x)))
-        x = self.pooling(self.relu(self.conv2(x)))
-        x = x.view(batch_size, -1)
-        x = self.fc1(x)
-        x = self.fc2(x)
-        x = self.fc3(x)
-        return x
-
-class CNNet2(torch.nn.Module):
-    '''
-    Try a more complex CNN:
-        - Conv2d Layer * 3
-        - ReLU Layer * 3
-        - MaxPooling Layer * 3
-        - Linear Layer * 3
-    '''
-    def __init__(self):
-        super(CNNet2, self).__init__()
-        self.conv1 = torch.nn.Conv2d(1, 10, kernel_size=3)
-        self.conv2 = torch.nn.Conv2d(10, 20, kernel_size=3)
-        self.conv3 = torch.nn.Conv2d(20, 40, kernel_size=3)
-        self.pooling1 = torch.nn.MaxPool2d(2)
-        self.pooling2 = torch.nn.MaxPool2d(1)
-        self.fc1 = torch.nn.Linear(360, 180)
-        self.fc2 = torch.nn.Linear(180, 90)
-        self.fc3 = torch.nn.Linear(90, 10)
-        self.relu = torch.nn.ReLU()
-    
-    def forward(self, x):
-        batch_size = x.size(0)
-        x = self.pooling1(self.relu(self.conv1(x)))
-        x = self.pooling1(self.relu(self.conv2(x)))
-        x = self.pooling2(self.relu(self.conv3(x)))
-        x = x.view(batch_size, -1)
-        x = self.fc1(x)
-        x = self.fc2(x)
-        x = self.fc3(x)
-        return x
+from mnist.nn.nnet import NNet
+from mnist.nn.cnnet import (CNNet, CNNet2, )
 
 class MnistModel(object):
     def __init__(self):
