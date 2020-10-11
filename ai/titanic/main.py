@@ -1,6 +1,5 @@
-import torch
+import torch 
 import pandas as pd
-import matplotlib.pyplot as plt
 
 from torch.utils.data import (Dataset, DataLoader, )
 
@@ -32,52 +31,68 @@ class TitanicDataset(Dataset):
         return self.len
 
 
-class TitanicModel(torch.nn.Module):
+class Net(torch.nn.Module):
     def __init__(self):
-        super(TitanicModel, self).__init__()
-        self.linear1 = torch.nn.Linear(7, 6)
-        self.linear2 = torch.nn.Linear(6, 4)
-        self.linear3 = torch.nn.Linear(4, 2)
-        self.linear4 = torch.nn.Linear(2, 1)
+        super(Net, self).__init__()
+        self.linear1 = torch.nn.Linear(7, 16)
+        self.linear2 = torch.nn.Linear(16, 8)
+        self.linear3 = torch.nn.Linear(8, 4)
+        self.linear4 = torch.nn.Linear(4, 1)
         self.activate = torch.nn.ReLU()
 
     def forward(self, x):
         x = self.activate(self.linear1(x))
         x = self.activate(self.linear2(x))
         x = self.activate(self.linear3(x))
-        x = torch.nn.Sigmoid()(self.linear4(x))
-        return x
+        return torch.nn.Sigmoid()(self.linear4(x))
 
+class TitanicModel(object):
+    def run(self):
+        self.__prepare_data()
+        self.__build_net()
+        self.__criterion_and_optimizer()
 
-def run():
-    dataset = TitanicDataset('titanic/dataset/train.csv')
-    train_loader = DataLoader(dataset=dataset, batch_size=32, shuffle=True, num_workers=2)
+        for epoch in range(100):
+            self.__train(epoch)
+            # self.__test(epoch)
 
-    model = TitanicModel()
-
-    criterion = torch.nn.BCELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
-
-    loss_list = []
-    epoch_list = []
-    for epoch in range(1000):
-        for i, (inputs, labels) in enumerate(train_loader, 0):
-            #1.Forward
-            y_pred = model(inputs)
-            loss = criterion(y_pred, labels)
-            loss_list.append(loss.data)
-            epoch_list.append(epoch * i)
-            print('Epoch:%s, I:%s, Loss:%s' % (epoch, i, loss.item(),))
-            #2.Backward
-            optimizer.zero_grad()
-            loss.backward()
-            #3.Update
-            optimizer.step()
+    def __prepare_data(self):
+        self.train_dataset = TitanicDataset('titanic/dataset/train.csv')
+        self.train_loader = DataLoader(dataset=self.train_dataset, shuffle=True, batch_size=42)
+        # self.test_dataset = TitanicDataset('titanic/dataset/test.csv')
+        # self.test_loader = DataLoader(dataset=self.test_dataset, shuffle=False, batch_size=42)
     
-    plt.plot(epoch_list, loss_list)
-    plt.xlabel('Epoch')
-    plt.ylabel('Loss')
+    def __build_net(self):
+        self.net = Net()
+
+    def __criterion_and_optimizer(self):
+        self.criterion = torch.nn.BCELoss()
+        self.optimizer = torch.optim.SGD(self.net.parameters(), lr=0.01, momentum=0.5)
+
+    def __train(self, epoch):
+        for i, (inputs, labels) in enumerate(self.train_dataset, 0):
+            self.optimizer.zero_grad()
+
+            y_pred = self.net(inputs)
+
+            loss =  self.criterion(y_pred, labels)
+            loss.backward()
+            if i % 300 == 0:
+                print('Epoch:%s, I:%s, Loss:%s' % (epoch, i, loss.item()))
+
+            self.optimizer.step()
+        
+    def __test(self, epoch):
+        correct = 0
+        total = 0
+        with torch.no_grad():
+            for inputs, labels in self.test_loader:
+                outputs = self.net(inputs)
+                _, predicted = torch.max(outputs.data, dim=1)
+                total += labels.size(0)
+                correct += (predicted == labels).sum().item()
+        print('Accuracy on test set: %d %%' % (100 * correct / total))
 
 
 if __name__ == "__main__":
-    run()
+    TitanicModel().run()
