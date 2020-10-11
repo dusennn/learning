@@ -69,18 +69,22 @@ class MnistModel(object):
         self.test_loader = DataLoader(dataset=self.train_dataset, shuffle=False, batch_size=batch_size)
     
     def __build_net(self):
-        # self.net = NNet()
-        self.net = CNNet()
+        '''Auto Choice GPU Or CPU'''
+        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        print('Using device:', device)
+        # self.nnet = NNet()
+        self.nnet = CNNet()
+        self.nnet.to(device)
 
     def __criterion_and_optimizer(self):
         self.criterion = torch.nn.CrossEntropyLoss()
-        self.optimizer = torch.optim.SGD(self.net.parameters(), lr=0.01, momentum=0.5)
+        self.optimizer = torch.optim.SGD(self.nnet.parameters(), lr=0.01, momentum=0.5)
 
     def __train(self, epoch):
         for i, (inputs, labels) in enumerate(self.train_loader, 0):
             self.optimizer.zero_grad()
 
-            y_pred = self.net(inputs)
+            y_pred = self.nnet(inputs)
 
             loss = self.criterion(y_pred, labels)
             loss.backward()
@@ -95,7 +99,7 @@ class MnistModel(object):
         total = 0
         with torch.no_grad():
             for images, labels in self.test_loader:
-                outputs = self.net(images)
+                outputs = self.nnet(images)
                 _, predicted = torch.max(outputs.data, dim=1)
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
