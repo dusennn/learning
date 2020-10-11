@@ -31,12 +31,12 @@ class CNNet(torch.nn.Module):
         self.conv2 = torch.nn.Conv2d(10, 20, kernel_size=5)
         self.pooling = torch.nn.MaxPool2d(2)
         self.fc = torch.nn.Linear(320, 10)
-        self.activate = torch.nn.ReLU()
+        self.relu = torch.nn.ReLU()
     
     def forward(self, x):
         batch_size = x.size(0)
-        x = self.activate(self.pooling(self.conv1(x)))
-        x = self.activate(self.pooling(self.conv2(x)))
+        x = self.pooling(self.relu(self.conv1(x)))
+        x = self.pooling(self.relu(self.conv2(x)))
         x = x.view(batch_size, -1)
         x = self.fc(x)
         return x
