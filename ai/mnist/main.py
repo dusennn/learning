@@ -4,9 +4,9 @@ from torchvision import (transforms, datasets, )
 from torch.utils.data import (Dataset, DataLoader, )
 
 
-class Net(torch.nn.Module):
+class NNet(torch.nn.Module):
     def __init__(self):
-        super(Net, self).__init__()
+        super(NNet, self).__init__()
         self.linear1 = torch.nn.Linear(784, 512)
         self.linear2 = torch.nn.Linear(512, 256)
         self.linear3 = torch.nn.Linear(256, 128)
@@ -23,6 +23,23 @@ class Net(torch.nn.Module):
         x = self.activate(self.linear4(x))
         x = self.activate(self.linear5(x))
         return self.linear6(x)
+
+class CNNet(torch.nn.Module):
+    def __init__(self):
+        super(CNNet, self).__init__()
+        self.conv1 = torch.nn.Conv2d(1, 10, kernel_size=5)
+        self.conv2 = torch.nn.Conv2d(10, 20, kernel_size=5)
+        self.pooling = torch.nn.MaxPool2d(2)
+        self.fc = torch.nn.Linear(320, 10)
+        self.activate = torch.nn.ReLU()
+    
+    def forward(self, x):
+        batch_size = x.size(0)
+        x = self.activate(self.pooling(self.conv1(x)))
+        x = self.activate(self.pooling(self.conv2(x)))
+        x = x.view(batch_size, -1)
+        x = self.fc(x)
+        return x
 
 
 class MnistModel(object):
@@ -52,7 +69,8 @@ class MnistModel(object):
         self.test_loader = DataLoader(dataset=self.train_dataset, shuffle=False, batch_size=batch_size)
     
     def __build_net(self):
-        self.net = Net()
+        # self.net = NNet()
+        self.net = CNNet()
 
     def __criterion_and_optimizer(self):
         self.criterion = torch.nn.CrossEntropyLoss()
