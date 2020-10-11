@@ -13,14 +13,15 @@ class Net(torch.nn.Module):
         self.linear4 = torch.nn.Linear(128, 64)
         self.linear5 = torch.nn.Linear(64, 32)
         self.linear6 = torch.nn.Linear(32, 10)
+        self.activate = torch.nn.ReLU()
 
     def forward(self, x):
         x = x.view(-1, 784)
-        x = torch.nn.ReLU()(self.linear1(x))
-        x = torch.nn.ReLU()(self.linear2(x))
-        x = torch.nn.ReLU()(self.linear3(x))
-        x = torch.nn.ReLU()(self.linear4(x))
-        x = torch.nn.ReLU()(self.linear5(x))
+        x = self.activate(self.linear1(x))
+        x = self.activate(self.linear2(x))
+        x = self.activate(self.linear3(x))
+        x = self.activate(self.linear4(x))
+        x = self.activate(self.linear5(x))
         return self.linear6(x)
 
 
