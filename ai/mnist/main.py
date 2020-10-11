@@ -1,6 +1,7 @@
 import torch
 import matplotlib.pyplot as plt
 
+from datetime import datetime
 from torchvision import (transforms, datasets, )
 from torch.utils.data import (Dataset, DataLoader, )
 
@@ -31,7 +32,9 @@ class CNNet(torch.nn.Module):
         self.conv1 = torch.nn.Conv2d(1, 10, kernel_size=5)
         self.conv2 = torch.nn.Conv2d(10, 20, kernel_size=5)
         self.pooling = torch.nn.MaxPool2d(2)
-        self.fc = torch.nn.Linear(320, 10)
+        self.fc1 = torch.nn.Linear(320, 160)
+        self.fc2 = torch.nn.Linear(160, 80)
+        self.fc3 = torch.nn.Linear(80, 10)
         self.relu = torch.nn.ReLU()
     
     def forward(self, x):
@@ -39,7 +42,9 @@ class CNNet(torch.nn.Module):
         x = self.pooling(self.relu(self.conv1(x)))
         x = self.pooling(self.relu(self.conv2(x)))
         x = x.view(batch_size, -1)
-        x = self.fc(x)
+        x = self.fc1(x)
+        x = self.fc2(x)
+        x = self.fc3(x)
         return x
 
 
@@ -55,7 +60,7 @@ class MnistModel(object):
         self.__build_net()
         self.__criterion_and_optimizer()
 
-        for epoch in range(1, 100):
+        for epoch in range(1, 10):
             self.__train(epoch)
             self.__test(epoch)
         
@@ -97,7 +102,7 @@ class MnistModel(object):
             if i % 100 == 0:
                 self.loss_list.append(loss.data)
                 self.epoch_list.append(self.epoch_list[-1]+1 if self.epoch_list else 1)
-                print('Epoch:%s, I:%s, Loss:%s' % (epoch, i, loss.item()))
+                print('Epoch:%s, I:%s, Loss:%s, Time:%s' % (epoch, i, loss.item(), datetime.now()))
 
             self.optimizer.step()
 
