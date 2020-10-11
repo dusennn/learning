@@ -23,8 +23,8 @@ class TitanicDataset(Dataset):
         self.x_data = torch.tensor(xy[['Pclass','Sex','Age','SibSp','Parch','Fare','Embarked']].values,
             dtype=torch.float32
         )
-        self.y_data = torch.tensor(xy['Survived'].values)
-
+        self.y_data = torch.tensor(xy['Survived'].values, dtype=torch.float32)
+     
     def __getitem__(self, index):
         return self.x_data[index], self.y_data[index]
 
@@ -45,7 +45,7 @@ class TitanicModel(torch.nn.Module):
         x = self.activate(self.linear1(x))
         x = self.activate(self.linear2(x))
         x = self.activate(self.linear3(x))
-        x = torch.nn.Sigmoid(self.linear4(x))
+        x = torch.nn.Sigmoid()(self.linear4(x))
         return x
 
 
@@ -55,7 +55,7 @@ def run():
 
     model = TitanicModel()
 
-    criterion = torch.nn.CrossEntropyLoss()
+    criterion = torch.nn.BCELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
     loss_list = []
