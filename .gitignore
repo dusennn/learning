@@ -109,3 +109,5 @@ mongo2es/logs/*.log
 .idea  
 .vscode/
 *.out
+processed/
+raw/
