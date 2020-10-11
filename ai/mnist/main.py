@@ -16,6 +16,9 @@ class MnistModel(object):
         '''Auto Choice GPU Or CPU'''
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         print('Using device:', self.device)
+        '''Set Parallel '''
+        torch.set_num_threads(8)
+        torch.set_num_interop_threads(8)
         self.loss_list, self.epoch_list = [], []
 
     def run(self):
