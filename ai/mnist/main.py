@@ -1,4 +1,5 @@
 import torch
+import matplotlib.pyplot as plt
 
 from torchvision import (transforms, datasets, )
 from torch.utils.data import (Dataset, DataLoader, )
@@ -43,14 +44,22 @@ class CNNet(torch.nn.Module):
 
 
 class MnistModel(object):
+    def __init__(self):
+        '''Auto Choice GPU Or CPU'''
+        self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        print('Using device:', self.device)
+        self.loss_list, self.epoch_list = [], []
+
     def run(self):
         self.__prepare_data()
         self.__build_net()
         self.__criterion_and_optimizer()
 
-        for epoch in range(100):
+        for epoch in range(1, 3):
             self.__train(epoch)
             self.__test(epoch)
+        
+        self.__show()
 
     def __prepare_data(self):
         batch_size = 64
@@ -69,27 +78,25 @@ class MnistModel(object):
         self.test_loader = DataLoader(dataset=self.train_dataset, shuffle=False, batch_size=batch_size)
     
     def __build_net(self):
-        '''Auto Choice GPU Or CPU'''
-        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-        print('Using device:', device)
         # self.nnet = NNet()
         self.nnet = CNNet()
-        self.nnet.to(device)
+        self.nnet.to(self.device)
 
     def __criterion_and_optimizer(self):
         self.criterion = torch.nn.CrossEntropyLoss()
         self.optimizer = torch.optim.SGD(self.nnet.parameters(), lr=0.01, momentum=0.5)
 
     def __train(self, epoch):
-        for i, (inputs, labels) in enumerate(self.train_loader, 0):
+        for i, (inputs, target) in enumerate(self.train_loader, 1):
+            inputs, targets = inputs.to(self.device), target.to(self.device)
+
             self.optimizer.zero_grad()
-
             y_pred = self.nnet(inputs)
-
-            loss = self.criterion(y_pred, labels)
+            loss = self.criterion(y_pred, target)
             loss.backward()
-
-            if i % 300 == 0:
+            if i % 100 == 0:
+                self.loss_list.append(loss.data)
+                self.epoch_list.append(self.epoch_list[-1]+1 if self.epoch_list else 1)
                 print('Epoch:%s, I:%s, Loss:%s' % (epoch, i, loss.item()))
 
             self.optimizer.step()
@@ -98,12 +105,21 @@ class MnistModel(object):
         correct = 0
         total = 0
         with torch.no_grad():
-            for images, labels in self.test_loader:
-                outputs = self.nnet(images)
+            for inputs, target in self.test_loader:
+                inputs, target = inputs.to(self.device), target.to(self.device)
+
+                outputs = self.nnet(inputs)
                 _, predicted = torch.max(outputs.data, dim=1)
-                total += labels.size(0)
-                correct += (predicted == labels).sum().item()
+                total += target.size(0)
+                correct += (predicted == target).sum().item()
         print('Accuracy on test set: %d %%' % (100 * correct / total) )
+
+    def __show(self):
+        plt.plot(self.epoch_list, self.loss_list)
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
+        plt.show()
+
 
 if __name__ == "__main__":
     MnistModel().run()
