@@ -1,7 +1,7 @@
 # Upgrade pip: pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade pip
 # Install with: pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 
-certifi==2020.6.20
+certifi==2022.12.7
 cycler==0.10.0
 future==0.18.2
 kiwisolver==1.2.0
