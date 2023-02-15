@@ -111,3 +111,5 @@ mongo2es/logs/*.log
 *.out
 processed/
 raw/
+
+*.class
