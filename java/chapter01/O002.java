@@ -3,7 +3,7 @@ import java.util.*;
  * 剑指Offer：002.二进制加法
 */
 
-public class BinaryAddition {
+public class O002 {
 
 	public String addBinary(String a, String b) {
 		var al = a.length();
@@ -84,8 +84,8 @@ public class BinaryAddition {
 			String s1 = data[0];
 			String s2 = data[1];
 
-			BinaryAddition ba = new BinaryAddition();
-			var result = ba.addBinary(s1, s2);
+			O002 obj = new O002();
+			var result = obj.addBinary(s1, s2);
 			System.out.format("['%s', '%s'] Result: '%s'\n", s1, s2, result);
 			System.out.println("======================");
 		}

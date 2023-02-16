@@ -2,7 +2,7 @@
  * 剑指Offer：001.整数除法
 */
 
-public class IntegerDivision {
+public class O001 {
 	private final int ERRORCODE = Integer.MAX_VALUE; //溢出值
 
 	public int divide(int a, int b) {
@@ -62,13 +62,13 @@ public class IntegerDivision {
 			{-2147483648, -1}
 		};
 
-		IntegerDivision id = new IntegerDivision();
+		O001 obj = new O001();
 		for (int [] data: testArrays){
 			var a = data[0];
 			var b = data[1];
 
 			try{
-				var result = id.divide(a, b);
+				var result = obj.divide(a, b);
 				var answer = a/b;
 				System.out.format("[%d/%d] Result:%d, Answer:%d\n", a, b, result, answer);
 			} catch(Exception e){
