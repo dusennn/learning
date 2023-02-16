@@ -1,5 +1,5 @@
 /**
- * 整数除法
+ * 剑指Offer：001.整数除法
 */
 
 public class IntegerDivision {
