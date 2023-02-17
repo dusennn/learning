@@ -7,32 +7,44 @@ import java.util.*;
 public class O014 {
 
 	/**
-	 * 1.使用双指针，p1 和 p2 同时指向 s1 字符串的开头
-	 * 2.如果 p1 的值等于 s1 最后一个元素的值，p2 从 p1 的位置不断往右移动。
-	 * 	判断是否能和 s1 完全匹配，若不匹配，p1 右移，寻找下一个子串
-	 * 3.如果 p1 的值不等于 s1 最后一个元素的值，p1 往右移动
-	 * 4.p1移动到 s2 尾部，循环结束
+	 * 1.把 s1 转成一个hash表，因为只包含26个字母，所以用长度为26的数组可以模拟哈希表
+	 * 2.从下标 0 遍历 s2 ，每次取 s2 的子串（下标i 到 i+s1.length）
+	 * 3.比对子串是否与 s1 匹配，若匹配返回 true，否则i往右移动
 	 */
 	public boolean algorithm(String s1, String s2) {
-		int p1 = 0;
-		int p2 = p1;
+		var s1CharMap = this.charMap(s1);
+
+		int i = 0;
 		var s1Len = s1.length();
 		var s2Len = s2.length();
-		while (p1 <= p2 && p2 < s2Len) {
+		while (i <= s2Len - s1Len) {
+			var subStr = s2.substring(i, i+s1Len);
+			var charMap = this.charMap(subStr);
 
-			var char1 = s2.charAt(p2);
-			var char2 = s1.charAt(s1Len-1-(p2-p1));
-			if (char1 == char2) {
-				p2++;
-				if (s1Len-1-(p2-p1) < 0)
-					return true; //子串完全匹配
+			if (this.equalsCharMap(s1CharMap, charMap)) {
+				return true;
 			} else {
-				p1++;
-				p2=p1;
+				i++;
 			}
 		}
 
 		return false;
+	}
+
+	private int[] charMap(String str) {
+		int[] map = new int[26];
+		for (int i = 0; i < str.length(); i++) {
+			map[str.charAt(i) - 'a']++;
+		}
+		return map;
+	}
+
+	private boolean equalsCharMap(int[] arr1, int[] arr2) {
+		boolean isEqual = true;
+		for (int i = 0; i < arr1.length; i++) {
+			if (arr1[i] != arr2[i]) isEqual = false;
+		}
+		return isEqual;
 	}
 
 	/**
@@ -60,6 +72,8 @@ public class O014 {
 			"ac",
 			"ac",
 			"ab",
+			"fabaf",
+			"ooolleoooleh"
 		};
 		String[] targets = {
 			"ab",
@@ -67,6 +81,8 @@ public class O014 {
 			"ca",
 			"c",
 			"ab",
+			"fb",
+			"hello"
 		};
 
 		var obj = new O014();
