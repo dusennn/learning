@@ -14,7 +14,7 @@ public class O008 {
 	public int algorithm(int[] nums, int k) {
 		int a = 0;
 		int b = 0;
-		int range = nums.length; //等于数组的长度，便于寻求最短路径
+		int range = Integer.MAX_VALUE; //初始为最大值，便于求最短路径
 		while (a < nums.length && b < nums.length && a >= 0 && b >= a) {
 
 			int sum = 0;
@@ -31,6 +31,9 @@ public class O008 {
 				a++;
 			}
 		}
+		// 没有合适路径，返回0
+		if (range == Integer.MAX_VALUE) return 0;
+
 		return range;
 	} 
 
