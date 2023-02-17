@@ -3,14 +3,17 @@ import java.util.*;
 /**
  * 008: 和大于或等于k的最短子数组
  * 
- * 使用双指针，
- * 1. 指针a 和 b指向数组的开头
- * 2. 计算a到b之间的元素之和，以及元素的路径长度。
- * 3. 如果元素和小于k，则把b往右移动。如果元素和大于k，则把a往右移动。
- * 4. 当a 指针移动到末尾时，算法结束。
  */
 
 public class O008 {
+	
+	/**
+	* 使用双指针，
+	* 1. 指针a 和 b指向数组的开头
+	* 2. 计算a到b之间的元素之和，以及元素的路径长度。
+	* 3. 如果元素和小于k，则把b往右移动。如果元素和大于k，则把a往右移动。
+	* 4. 当a 指针移动到末尾时，算法结束。
+	 */
 	public int algorithm(int[] nums, int k) {
 		int a = 0;
 		int b = 0;
@@ -35,7 +38,7 @@ public class O008 {
 		if (range == Integer.MAX_VALUE) return 0;
 
 		return range;
-	} 
+	}
 
 	public static void main(String[] args) {
 		int[][] testset = {
