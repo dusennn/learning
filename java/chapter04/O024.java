@@ -43,10 +43,10 @@ class ListNode {
 public class O024 {
 
 	/**
-	 * 1. 遍历原始链表
-	 * 2. 用三个指针 p1 p2 p3 记录当前元素的 上一个节点、当前节点、下一个节点
-	 * 3. 初始化时，p1 = null，每次循环令 p3 = p2.next; p2.next = p1; p1 = p2; p2 = p3;
-	 * 4. 直到 p2 为空，循环结束，返回 p1，即反转后链表的头指针
+		 * 1. 遍历原始链表
+		 * 2. 用三个指针 p1 p2 p3 记录当前元素的 上一个节点、当前节点、下一个节点
+		 * 3. 初始化时，p1 = null，每次循环令 p3 = p2.next; p2.next = p1; p1 = p2; p2 = p3;
+		 * 4. 直到 p2 为空，循环结束，返回 p1，即反转后链表的头指针
 	 */
 	public ListNode algorithm(ListNode head) {
 		if (head == null) return null;
