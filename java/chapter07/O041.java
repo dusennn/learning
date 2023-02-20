@@ -30,10 +30,10 @@ class MovingAverage {
 
 	public double next(int val) {
 		if (this.queue.size() >= this.size) {
-			this.totalSum -= this.queue.pop(); //从队列头部弹出元素
+			this.totalSum -= this.queue.poll(); //弹出元素
 		}
 
-		this.queue.add(val); //添加到队列的尾部
+		this.queue.offer(val); //添加元素
 		this.totalSum += val;
 		return this.totalSum / this.queue.size();
 	}
