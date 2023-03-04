@@ -158,6 +158,41 @@ class TreeNode {
 		subOrderDfs(root.right, nodes);
 		nodes.add(root.val);
 	}
+
+	/**
+	 * 后序遍历（非递归）
+	 * 1. 后序遍历原理：先左子树，然后右子树，最后根节点。
+	 * 2. 使用栈保存待使用的节点，使用游标进行探测，并且记录上一次的探测节点
+	 * 	第一步：游标指向根节点
+	 * 	第二步：游标不断探测节点的左子树，记录经过的节点到栈中，直到左子树为空
+	 * 	第三步：判断栈顶节点是否存在右子树，
+	 * 		如果存在，游标开始探测节点的右子树，上一次的探测节点设为栈顶元素，记录经过的节点到栈中，直到右子树为空
+	 * 		如果不存在，栈pop元素，把栈顶元素赋值给游标
+	 */
+	public static List<Integer> subOrderTraversalLoop(TreeNode root) {
+		List<Integer> nodes = new ArrayList<>();
+		Stack<TreeNode> stack = new Stack<>();
+		var cur = root;
+		TreeNode prev = null;
+		while (cur != null || !stack.isEmpty()) {
+			while (cur != null) {
+				stack.push(cur);
+				cur = cur.left;
+			}
+
+			cur = stack.peek();
+			if (cur.right != null && cur.right != prev) {
+				cur = cur.right;
+			} else {
+				cur = stack.pop();
+				nodes.add(cur.val);
+				prev = cur;
+				cur = null;
+			}
+		}
+
+		return nodes;
+	}
 }
 
 public class A3 {
@@ -180,5 +215,7 @@ public class A3 {
 
 		result = TreeNode.subOrderTraversal(root);
 		System.out.printf("后序遍历：%s\n", result);
+		result = TreeNode.subOrderTraversalLoop(root);
+		System.out.printf("后序遍历(非递归)：%s\n", result);
 	}
 }
