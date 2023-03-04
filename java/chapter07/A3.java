@@ -75,6 +75,32 @@ class TreeNode {
 	}
 
 	/**
+	 * 先序遍历（非递归）
+	 * 1. 先序规则：先根节点，然后左子树，最后右子树
+	 * 2. 使用栈来存放节点，使用游标记录探测位置
+	 * 	第一步：令游标指向根节点
+	 * 	第二步：从游标开始，不断循环探测左子树，把经过的节点放入栈中保存
+	 * 	第三步：从栈中pop节点，把游标指向节点的右子树，继续第二、三步操作
+	 */
+	public static List<Integer> preOrderTraversalLoop(TreeNode root) {
+		List<Integer> nodes = new ArrayList<>();
+		Stack<TreeNode> stack = new Stack<>();
+		var cur = root;
+		while (cur != null || !stack.isEmpty()) {
+			while (cur != null) {
+				nodes.add(cur.val);
+				stack.push(cur);
+				cur = cur.left;
+			}
+
+			cur = stack.pop();
+			cur = cur.right;
+		}
+
+		return nodes;
+	}
+
+	/**
 	 * 中序遍历
 	 */
 	public static List<Integer> midOrderTraversal(TreeNode root) {
@@ -117,6 +143,8 @@ public class A3 {
 
 		result = TreeNode.preOrderTraversal(root);
 		System.out.printf("先序遍历：%s\n", result);
+		result = TreeNode.preOrderTraversalLoop(root);
+		System.out.printf("先序遍历(非递归)：%s\n", result);
 
 		result = TreeNode.midOrderTraversal(root);
 		System.out.printf("中序遍历：%s\n", result);
