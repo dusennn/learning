@@ -33,6 +33,32 @@ class TreeNode {
 	}
 
 	/**
+	 * 广度优先遍历
+	 */
+	public static List<Integer> bfs(TreeNode root) {
+		Queue<TreeNode> queue = new LinkedList<>();
+		if (root != null) {
+			queue.offer(root);
+		}
+
+		List<Integer> nodes = new ArrayList<>();
+		while (!queue.isEmpty()) {
+			var node = queue.poll();
+			nodes.add(node.val);
+
+			if (node.left != null) {
+				queue.offer(node.left);
+			}
+
+			if (node.right != null) {
+				queue.offer(node.right);
+			}
+		}
+
+		return nodes;
+	}
+
+	/**
 	 * 先序遍历
 	 */
 	public static List<Integer> preOrderTraversal(TreeNode root) {
@@ -85,14 +111,17 @@ public class A3 {
 
 	public static void main(String[] args) {
 		TreeNode root = TreeNode.create();
+		
+		var result = TreeNode.bfs(root);
+		System.out.printf("广度优先遍历：%s\n", result);
 
-		var result = TreeNode.preOrderTraversal(root);
-		System.out.printf("二叉树先序遍历：%s\n", result);
+		result = TreeNode.preOrderTraversal(root);
+		System.out.printf("先序遍历：%s\n", result);
 
 		result = TreeNode.midOrderTraversal(root);
-		System.out.printf("二叉树中序遍历：%s\n", result);
+		System.out.printf("中序遍历：%s\n", result);
 
 		result = TreeNode.subOrderTraversal(root);
-		System.out.printf("二叉树后序遍历：%s\n", result);
+		System.out.printf("后序遍历：%s\n", result);
 	}
 }
