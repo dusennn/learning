@@ -35,34 +35,49 @@ class TreeNode {
 	/**
 	 * 先序遍历
 	 */
-	public static void preOrder(TreeNode root) {
+	public static List<Integer> preOrderTraversal(TreeNode root) {
+		List<Integer> nodes = new ArrayList<>();
+		preOrderDfs(root, nodes);
+		return nodes;
+	}
+	private static void preOrderDfs(TreeNode root, List<Integer> nodes) {
 		if (root == null) return;
 
-		System.out.printf("%d\t", root.val);
-		preOrder(root.left);
-		preOrder(root.right);
+		nodes.add(root.val);
+		preOrderDfs(root.left, nodes);
+		preOrderDfs(root.right, nodes);
 	}
 
 	/**
 	 * 中序遍历
 	 */
-	public static void midOrder(TreeNode root) {
+	public static List<Integer> midOrderTraversal(TreeNode root) {
+		List<Integer> nodes = new ArrayList<>();
+		midOrderDfs(root, nodes);
+		return nodes;
+	}
+	private static void midOrderDfs(TreeNode root, List<Integer> nodes) {
 		if (root == null) return;
 
-		midOrder(root.left);
-		System.out.printf("%d\t", root.val);
-		midOrder(root.right);
+		midOrderDfs(root.left, nodes);
+		nodes.add(root.val);
+		midOrderDfs(root.right, nodes);
 	}
 
 	/**
 	 * 后序遍历
 	 */
-	public static void subOrder(TreeNode root) {
+	public static List<Integer> subOrderTraversal(TreeNode root) {
+		List<Integer> nodes = new ArrayList<>();
+		subOrderDfs(root, nodes);
+		return nodes;
+	}
+	private static void subOrderDfs(TreeNode root, List<Integer> nodes) {
 		if (root == null) return;
 
-		subOrder(root.left);
-		subOrder(root.right);
-		System.out.printf("%d\t", root.val);
+		subOrderDfs(root.left, nodes);
+		subOrderDfs(root.right, nodes);
+		nodes.add(root.val);
 	}
 }
 
@@ -71,13 +86,13 @@ public class A3 {
 	public static void main(String[] args) {
 		TreeNode root = TreeNode.create();
 
-		System.out.println("\n二叉树先序遍历：");
-		TreeNode.preOrder(root);
+		var result = TreeNode.preOrderTraversal(root);
+		System.out.printf("二叉树先序遍历：%s\n", result);
 
-		System.out.println("\n二叉树中序遍历：");
-		TreeNode.midOrder(root);
+		result = TreeNode.midOrderTraversal(root);
+		System.out.printf("二叉树中序遍历：%s\n", result);
 
-		System.out.println("\n二叉树后序遍历：");
-		TreeNode.subOrder(root);
+		result = TreeNode.subOrderTraversal(root);
+		System.out.printf("二叉树后序遍历：%s\n", result);
 	}
 }
