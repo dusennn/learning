@@ -117,6 +117,33 @@ class TreeNode {
 	}
 
 	/**
+	 * 中序遍历（非递归）
+	 * 1. 中序遍历原理：先左子树，然后根节点，最后右子树
+	 * 2. 使用栈存放待使用的节点，使用游标记录探测位置
+	 * 	第一步：令游标指向树根
+	 * 	第二步：游标不断往节点的左子树移动，栈记录游标经过的节点
+	 * 	第三步：当左子树为空，栈pop元素，保存栈顶元素信息。
+	 * 	第四步：指针指向栈顶元素的右子树，继续第二、三、四步循环。
+	 */
+	public static List<Integer> midOrderTraversalLoop(TreeNode root) {
+		List<Integer> nodes = new ArrayList<>();
+		Stack<TreeNode> stack = new Stack<>();
+		var cur = root;
+		while (cur != null || !stack.isEmpty()) {
+			while (cur != null) {
+				stack.push(cur);
+				cur = cur.left;
+			}
+
+			cur = stack.pop();
+			nodes.add(cur.val);
+			cur = cur.right;
+		}
+
+		return nodes;
+	}
+
+	/**
 	 * 后序遍历
 	 */
 	public static List<Integer> subOrderTraversal(TreeNode root) {
@@ -148,6 +175,8 @@ public class A3 {
 
 		result = TreeNode.midOrderTraversal(root);
 		System.out.printf("中序遍历：%s\n", result);
+		result = TreeNode.midOrderTraversalLoop(root);
+		System.out.printf("中序遍历(非递归)：%s\n", result);
 
 		result = TreeNode.subOrderTraversal(root);
 		System.out.printf("后序遍历：%s\n", result);
