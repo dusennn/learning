@@ -7,51 +7,38 @@ import java.util.*;
 public class A3 {
 
 	/**
-	 * 快速排序
-	 * 1. 选取第一个元素作为基准点 flag
-	 * 2. 定义两个指针 p1 p2，p1 指向第一个元素，p2 指向 p1 的下一个
-	 * 3. 不断往右移动 p2 指针，当遇到比 flag 小的元素，把p1往右移动一步，
-	 * 把 p1 位置的元素与 p2 进行交换，然后继续往右移动 p2。
-	 * 当 p2 移动到数组尾部时，把基准点元素与 p1 的位置进行交换，第一次排序完成。
-	 * 4. 然后按照 p1 所在的位置，把数组分为两段，分别按照 第1、2、3步的方式进行处理
-	 * 5. 直到数组无法拆分，只有一个元素时，排序结束
+	 * 1. 列表元素小于等于1，直接返回不用排序
+	 * 2. 选择表头元素作为 key，定义 low 指向表头，定义 high 指向表尾
+	 * 3. high 往左移动，如果指向的元素小于 key，则与 low 指向的元素交换位置，
+	 * 4. low 往右移动，如果指向的元素大于 key，则与 high 指向的元素交换位置，
+	 * 5. 等到 low 和 high 相遇时，把 key 复制到 low 和 high所在的位置，
+	 * 然后把列表从这个点，一分为二，递归执行上述步骤。
 	 */
-	public int[] algorithm(int[] nums) {
-		int start = 0;
-		int end = nums.length;
-		core(nums, start, end);
-		return nums;
+	public void quickSort(int[] nums) {
+		if (nums.length <= 1) return;
+
+		core(nums, 0, nums.length - 1);
 	}
 
-	private void core(int[] nums, int start, int end) {
+	public void core(int[] nums, int start, int end) {
 		if (start >= end) return;
-		
-		int key = nums[start]; //基准值
-		int p1 = start;
-		int p2 = p1 + 1;
-		while (p2 < end) {
-			if (nums[p2] < key) {
-				p1++;
-				swap(nums, p1, p2);
-			}
-			p2++;
+
+		int key = nums[start];
+		int low = start;
+		int high = end;
+		while (low < high) {
+			while (low < high && nums[high] >= key) high--;
+			nums[low] = nums[high];
+
+			while (low < high && nums[low] <= key) low++;
+			nums[high] = nums[low];
 		}
-		nums[start] = nums[p1];
-		nums[p1] = key;
+		nums[low] = key;
 
-		//前半段
-		core(nums, start, p1-1);
-		//后半段 
-		core(nums, p1+1, end);
+		core(nums, start, low-1);
+		core(nums, low+1, end);
 	}
 
-	private void swap(int[] nums, int i, int j) {
-		if (i == j) return;
-
-		int tmp = nums[i];
-		nums[i] = nums[j];
-		nums[j] = tmp;
-	}
 
 	public static void main(String[] args) {
 		int[][] testset = {
@@ -65,8 +52,8 @@ public class A3 {
 			var nums = testset[i];
 
 			System.out.printf("Src:%s\n", Arrays.toString(nums));
-			var result = obj.algorithm(nums);
-			System.out.printf("Dst:%s\n", Arrays.toString(result));
+			obj.quickSort(nums);
+			System.out.printf("Dst:%s\n", Arrays.toString(nums));
 			System.out.println("======================");
 		}
 	}
