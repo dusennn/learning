@@ -112,4 +112,7 @@ mongo2es/logs/*.log
 processed/
 raw/
 
+# java
 *.class
+*.iml
+**/out/**
