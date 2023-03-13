@@ -3,7 +3,7 @@ import java.util.*;
 /**
  * 454. 四数相加 II
  */
-class T454 {
+public class T454 {
     /**
     分组 + HashMap：预计算减轻时间复杂度
     0. 定义 count 统计满足条件的数量
